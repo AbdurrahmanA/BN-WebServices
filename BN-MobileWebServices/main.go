@@ -20,7 +20,6 @@ func main() {
 	mux.HandleFunc("/addproduct", addProductPage)
 	mux.HandleFunc("/register", registerPage)
 	mux.HandleFunc("/registercontrol", validationRegisterPage)
-	mux.HandleFunc("/stockview", stockViewPage)
 
 	handler := cors.Default().Handler(mux)
 

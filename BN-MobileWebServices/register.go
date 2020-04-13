@@ -20,7 +20,6 @@ func registerPage(w http.ResponseWriter, r *http.Request) {
 			} else {
 				if control == "Password" {
 					writeResponse(w, incorrectInput("Şifreler"))
-
 				} else if control == "Save" {
 					writeResponse(w, dataBaseSaveError())
 

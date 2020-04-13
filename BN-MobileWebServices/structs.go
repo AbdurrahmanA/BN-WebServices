@@ -17,7 +17,6 @@ type Person struct {
 		UserPhone    string `bson:"user_phone" json:"user_phone"`
 	} `bson:"contact_info"  `
 	UserInfos struct {
-		UserName     string `bson:"user_name" json:"user_name"`
 		UserPassword string `bson:"user_password" json:"user_password"`
 		UserMail     string `bson:"user_mail" json:"user_mail"`
 		UserToken    string `bson:"user_token" json:"user_token"`
@@ -56,10 +55,22 @@ type Beacon struct {
 	} `bson:"infos"  `
 	UserInfos struct {
 		UserID    bson.ObjectId `bson:"user_id" json:"user_id" `
-		UserName  string        `bson:"user_name" json:"user_name"`
 		UserMail  string        `bson:"user_mail" json:"user_mail"`
 		UserPhone string        `bson:"user_phone" json:"user_phone"`
 	} `bson:"user"  `
+}
+
+//StockView beacon verileri stock ekranın için hazırlanması
+type StockView struct {
+	UUID  string ` json:"uuid"`
+	ID    int    `json:"id"`
+	Major int    ` json:"major"`
+	Minor int    ` json:"minor"`
+}
+
+//StockViewArray beacon verileri stock ekranında vermemizi saglar
+type StockViewArray struct {
+	StockViews []*StockView `json:"stocks" `
 }
 
 //Orders Sipariş bilgileri için gerekli yapı
@@ -71,7 +82,6 @@ type Orders struct {
 	TotalPrice         int     `bson:"total_price" json:"total_price" `
 	ContactInfo        struct {
 		UserID      string `bson:"user_id" json:"user_id" `
-		UserName    string `bson:"user_real_name" json:"user_real_name"`
 		UserSurname string `bson:"user_surname" json:"user_surname"`
 		UserAddress string `bson:"user_address" json:"user_address"`
 		UserPhone   string `bson:"user_phone" json:"user_phone"`
@@ -103,7 +113,6 @@ type LostBeacon struct {
 	LostLong           float64       `bson:"lost_long" json:"lost_long" `
 	UserInfos          struct {
 		UserID    bson.ObjectId `bson:"user_id" json:"user_id" `
-		UserName  string        `bson:"user_name" json:"user_name"`
 		UserMail  string        `bson:"user_mail" json:"user_mail"`
 		UserPhone string        `bson:"user_phone" json:"user_phone"`
 	} `bson:"user_infos"  `

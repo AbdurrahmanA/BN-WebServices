@@ -18,10 +18,8 @@ func validationRegisterPage(w http.ResponseWriter, r *http.Request) {
 			} else {
 				if control == "NotFound" {
 					writeResponse(w, notFindRecordError())
-
 				} else if control == "Save" {
 					writeResponse(w, dataBaseSaveError())
-
 				} else {
 					writeResponse(w, someThingWentWrong())
 				}

@@ -168,6 +168,7 @@ type UserInfoInApp struct {
 	UserPhone    string        `json:"user_phone" `
 	UserPassword string        `json:"user_password" `
 	UserMail     string        `json:"user_mail"`
+	Image        string        `json:"user_img"`
 }
 
 //MyDevices kullanıcının cihazlarının bilgisi
@@ -175,6 +176,7 @@ type MyDevices struct {
 	ID         bson.ObjectId ` json:"beacon_id"`
 	BeaconName string        ` json:"beacon_name"`
 	BeaconType string        ` json:"type"`
+	Image      string        ` json:"img"`
 }
 
 //MyDevicesDetail cihazın gerekli bilgileri
@@ -182,6 +184,7 @@ type MyDevicesDetail struct {
 	BeaconName string ` json:"beacon_name"`
 	BeaconType string ` json:"type"`
 	Variance   int    ` json:"variance"`
+	Image      string ` json:"img"`
 }
 
 //MyDevicesDetailAndInfos cihazın ve kişinin gerekli bilgileri

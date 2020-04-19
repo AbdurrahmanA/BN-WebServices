@@ -41,7 +41,7 @@ func getMyDevices(getID string) ([]byte, string) {
 		beacons := connection.Collection("beacons").Find(bson.M{"user_infos.user_id": bson.ObjectIdHex(id)})
 		for beacons.Next(beacon) {
 			beaconTypeConverter := checkBeaconType(beacon.Information.BeaconType)
-			user = &MyDevices{beacon.Id, beacon.Information.BeaconName, beaconTypeConverter}
+			user = &MyDevices{beacon.Id, beacon.Information.BeaconName, beaconTypeConverter, beacon.Information.Image}
 			l = append(l, user)
 		}
 		data, _ = json.Marshal(l)

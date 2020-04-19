@@ -44,7 +44,7 @@ func findUser(userMail string, userPassword string) ([]byte, string) {
 	if controlMail != true {
 		return data, "Mail"
 	}
-	err := connection.Collection("users").FindOne(bson.M{"user_info.user_mail": userMail, "user_info.user_password": userPassword}, person)
+	err := connection.Collection("users").FindOne(bson.M{"user_infos.user_mail": userMail, "user_infos.user_password": userPassword}, person)
 	if err != nil {
 		return data, "Notfound"
 	}

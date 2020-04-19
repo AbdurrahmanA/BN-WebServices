@@ -19,7 +19,7 @@ func invalidPermission() string {
 	return `{"error": "true","message":"Bu servisi kullanma yetkisine sahip değilsiniz."}`
 }
 func incorrectInput(inputName string) string {
-	return `{"error": "true","message":"` + inputName + ` hatalı ."}`
+	return `{"error": "true","message":"` + inputName + ` hatası ."}`
 }
 func dataBaseSaveError() string {
 	return `{"error": "true","message":"Veri tabanına kayıtta hata oluştu."}`

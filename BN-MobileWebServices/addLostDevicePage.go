@@ -74,12 +74,12 @@ func addLostDeviceControl(phone string, email string, creditCardNo string, credi
 		floatLostLong, _ := strconv.ParseFloat(lostLong, 64)
 
 		lostDevice := &LostBeacon{
-			BeaconID:   beacon.Id,
 			LostDate:   lastSeen,
 			LostStatus: 1,
 			LostLat:    floatLostLat,
 			LostLong:   floatLostLong,
 		}
+		lostDevice.BeaconInfos.BeaconID = beacon.Id
 		lostDevice.UserInfos.UserID = beacon.UserInfos.UserID
 		errs := connection.Collection("lost_beacons").Save(lostDevice)
 		if errs != nil {

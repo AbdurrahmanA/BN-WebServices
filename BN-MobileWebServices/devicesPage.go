@@ -38,7 +38,7 @@ func getMyDevices(getID string) ([]byte, string) {
 	id, errID := checkObjID(getID)
 	if errID == true {
 		beacon := &Beacon{}
-		beacons := connection.Collection("beacons").Find(bson.M{"user.user_id": bson.ObjectIdHex(id)})
+		beacons := connection.Collection("beacons").Find(bson.M{"user_infos.user_id": bson.ObjectIdHex(id)})
 		for beacons.Next(beacon) {
 			beaconTypeConverter := checkBeaconType(beacon.Information.BeaconType)
 			user = &MyDevices{beacon.Id, beacon.Information.BeaconName, beaconTypeConverter}

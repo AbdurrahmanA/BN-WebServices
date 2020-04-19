@@ -32,7 +32,7 @@ func validationRegisterPage(w http.ResponseWriter, r *http.Request) {
 
 func validationRegister(token string) (bool, string) {
 	person := &Person{}
-	err := connection.Collection("users").FindOne(bson.M{"user_info.user_token": token}, person)
+	err := connection.Collection("users").FindOne(bson.M{"user_infos.user_token": token}, person)
 	if err != nil {
 		return false, "NotFound"
 	}

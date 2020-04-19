@@ -9,13 +9,15 @@ import (
 
 func updateDevicePage(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "PUT" {
-		var update, control = controlDeviceInfo(r.FormValue("name"), r.FormValue("type"), r.FormValue("variance"), r.FormValue("beaconID"))
+		var update, control = controlDeviceInfo(r.FormValue("name"), r.FormValue("variance"), r.FormValue("img"), r.FormValue("imgDesc"), r.FormValue("beaconID"))
 		if r.FormValue("name") == "" {
 			writeResponse(w, requiredInputError("İsim"))
-		} else if r.FormValue("type") == "" {
-			writeResponse(w, requiredInputError("Tip"))
 		} else if r.FormValue("variance") == "" {
 			writeResponse(w, requiredInputError("Güven aralığı"))
+		} else if r.FormValue("img") == "" {
+			writeResponse(w, requiredInputError("Image"))
+		} else if r.FormValue("imgDesc") == "" {
+			writeResponse(w, requiredInputError("Image Description"))
 		} else if r.FormValue("beaconID") == "" {
 			writeResponse(w, requiredInputError("Cihaz numarası"))
 		} else {
@@ -24,13 +26,22 @@ func updateDevicePage(w http.ResponseWriter, r *http.Request) {
 			} else {
 				if control == "ID" {
 					writeResponse(w, objectIDError())
-
 				} else if control == "Nil" {
 					writeResponse(w, notFindRecordError())
-
 				} else if control == "Save" {
 					writeResponse(w, dataBaseSaveError())
-
+				} else if control == "Base64" {
+					writeResponse(w, incorrectInput("Base64"))
+				} else if control == "File" {
+					writeResponse(w, incorrectInput("File"))
+				} else if control == "Remove" {
+					writeResponse(w, incorrectInput("Remove"))
+				} else if control == "Create" {
+					writeResponse(w, incorrectInput("Create"))
+				} else if control == "Write" {
+					writeResponse(w, incorrectInput("Write"))
+				} else if control == "Sync" {
+					writeResponse(w, incorrectInput("Sync"))
 				} else {
 					writeResponse(w, someThingWentWrong())
 				}
@@ -41,7 +52,7 @@ func updateDevicePage(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func controlDeviceInfo(name string, getType string, variance string, beaconID string) (bool, string) {
+func controlDeviceInfo(name string, variance string, img string, imgDesc string, beaconID string) (bool, string) {
 	device := &Beacon{}
 	conroltID, errID := checkObjID(beaconID)
 	if errID == true {
@@ -49,12 +60,14 @@ func controlDeviceInfo(name string, getType string, variance string, beaconID st
 		if err != nil {
 			return false, "Nil"
 		}
+		imgPathControl, imgPath := uploadImage(img, conroltID, imgDesc)
+		if imgPathControl == false {
+			return false, imgPath
+		}
 		newVariance, _ := strconv.Atoi(variance)
-		newType, _ := strconv.Atoi(getType)
-
 		device.Information.BeaconName = name
-		device.Information.BeaconType = newType
 		device.Information.Variance = newVariance
+		device.Information.Image = imgPath
 		errors := connection.Collection("beacons").Save(device)
 		if errors != nil {
 			return false, "Save"

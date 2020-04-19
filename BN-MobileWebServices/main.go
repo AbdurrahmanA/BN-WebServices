@@ -21,6 +21,8 @@ func main() {
 	mux.HandleFunc("/register", registerPage)
 	mux.HandleFunc("/registercontrol", validationRegisterPage)
 	mux.HandleFunc("/stocks", stockViewPage)
+	mux.HandleFunc("/addbeacon", addBeaconPage)
+	mux.HandleFunc("/changepassword", passwordChangePage)
 
 	handler := cors.Default().Handler(mux)
 

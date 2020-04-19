@@ -8,7 +8,7 @@ import (
 )
 
 func lostDevicesPage(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "GET" {
+	if r.Method == "POST" {
 		if r.FormValue("userId") == "" {
 			writeResponse(w, requiredInputError("Kullanıcı numarası"))
 		} else {
@@ -38,14 +38,14 @@ func getLostDeviceList(id string) ([]byte, string) {
 		beacon := &LostBeacon{}
 		lostBeacon := connection.Collection("lost_beacons").Find(bson.M{"user_infos.user_id": bson.ObjectIdHex(controlID)})
 		for lostBeacon.Next(beacon) {
-			beaconInfo = &LostBeaconInApp{beacon.Created, beacon.LostLat, beacon.LostLong}
+			beaconInfo = &LostBeaconInApp{beacon.Created, beacon.LostLat, beacon.LostLong, beacon.LostDesc}
 			l = append(l, beaconInfo)
 		}
 		if l == nil {
 			return nil, "nil"
 		}
 		if l != nil {
-			response := &Devices{l}
+			response := &LostDevices{l}
 			data, _ = json.Marshal(response)
 			return addError(data), ""
 		}

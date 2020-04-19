@@ -34,7 +34,7 @@ func getProfileInfos(token string) ([]byte, string) {
 	var data []byte
 
 	person := &Person{}
-	err := connection.Collection("users").FindOne(bson.M{"user_info.user_token": token}, person)
+	err := connection.Collection("users").FindOne(bson.M{"user_infos.user_token": token}, person)
 	if err != nil {
 		return data, "NotFound"
 	}
@@ -42,7 +42,14 @@ func getProfileInfos(token string) ([]byte, string) {
 	if lvl == 0 {
 		return data, "Lvl"
 	}
-	user := &UserInfoInApp{person.Id, person.Contacts.UserRealName, person.Contacts.UserSurname, person.Contacts.UserPhone, person.UserInfos.UserPassword, person.UserInfos.UserMail}
+	user := &UserInfoInApp{
+		person.Id,
+		person.Contacts.UserRealName,
+		person.Contacts.UserSurname,
+		person.Contacts.UserPhone,
+		person.UserInfos.UserPassword,
+		person.UserInfos.UserMail,
+	}
 	data, _ = json.Marshal(user)
 	return addError(data), ""
 

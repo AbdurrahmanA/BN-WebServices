@@ -14,7 +14,7 @@ import (
 
 func checkMail(newValues string) bool {
 	person := &Person{}
-	connection.Collection("users").FindOne(bson.M{"user_info.user_mail": newValues}, person)
+	connection.Collection("users").FindOne(bson.M{"user_infos.user_mail": newValues}, person)
 	if person.UserInfos.UserMail != "" {
 		return false
 	}
@@ -23,20 +23,23 @@ func checkMail(newValues string) bool {
 
 func checkPhone(newValues string) bool {
 	person := &Person{}
-	connection.Collection("users").FindOne(bson.M{"contact_info.user_phone": newValues}, person)
+	connection.Collection("users").FindOne(bson.M{"contact_infos.user_phone": newValues}, person)
 	if person.Contacts.UserPhone != "" {
 		return false
 	}
 	return true
 }
 func checkBeaconType(beaconType int) string {
-	if beaconType == 0 {
+	if beaconType == 1 {
 		return "Tasma"
 	}
-	if beaconType == 1 {
+	if beaconType == 2 {
 		return "Bileklik"
 	}
-	if beaconType == 5 {
+	if beaconType == 3 {
+		return "Anahtarlık"
+	}
+	if beaconType == 4 {
 		return "Kalemlik"
 	}
 	return ""
@@ -61,7 +64,7 @@ func addError(byteJSON []byte) []byte {
 }
 func checkPermission(token string) bool {
 	person := &Person{}
-	connection.Collection("users").FindOne(bson.M{"user_info.user_token": token}, person)
+	connection.Collection("users").FindOne(bson.M{"user_infos.user_token": token}, person)
 	if person.UserInfos.RoleLvl == 5 {
 		return true
 	}
@@ -111,4 +114,14 @@ func sendRegisterMail(token string, email string) bool {
 		return false
 	}
 	return true
+}
+func fileExists(path string) (bool, error) {
+	_, err := os.Stat(path)
+	if err == nil {
+		return true, nil
+	}
+	if os.IsNotExist(err) {
+		return false, nil
+	}
+	return true, err
 }

@@ -15,13 +15,14 @@ type Person struct {
 		UserSurname  string `bson:"user_surname" json:"user_surname"`
 		UserAddress  string `bson:"user_address" json:"user_address"`
 		UserPhone    string `bson:"user_phone" json:"user_phone"`
-	} `bson:"contact_info"  `
+	} `bson:"contact_infos"  `
 	UserInfos struct {
 		UserPassword string `bson:"user_password" json:"user_password"`
 		UserMail     string `bson:"user_mail" json:"user_mail"`
 		UserToken    string `bson:"user_token" json:"user_token"`
 		RoleLvl      int    `bson:"role_lvl" json:"role_lvl"`
-	} `bson:"user_info"  `
+		Image        string `bson:"img" json:"img"`
+	} `bson:"user_infos"  `
 }
 
 //Userjon  Giriş işlemi için gerekli dönüşleri oluşturmamızı sağlayan yapı
@@ -29,8 +30,8 @@ type Userjon struct {
 	UserToken string `json:"user_token" `
 }
 
-//Devices cihazları dizi döndürmeyi sağlayan yapı
-type Devices struct {
+//LostDevices cihazları dizi döndürmeyi sağlayan yapı
+type LostDevices struct {
 	Beacons []*LostBeaconInApp `json:"beacons" `
 }
 
@@ -45,25 +46,23 @@ type Beacon struct {
 	Information        struct {
 		BeaconName string    `bson:"beacon_name" json:"beacon_name"`
 		UUID       string    `bson:"uuid" json:"uuid"`
-		ID         int       `bson:"id" json:"id"`
 		Major      int       `bson:"major" json:"major"`
 		Minor      int       `bson:"minor" json:"minor"`
 		Variance   int       `bson:"variance" json:"variance"`
 		Image      string    `bson:"image" json:"image"`
 		BeaconType int       `bson:"type" json:"type"`
 		LastSeen   time.Time `bson:"last_seen" json:"last_seen"`
-	} `bson:"infos"  `
+	} `bson:"beacon_infos"  `
 	UserInfos struct {
 		UserID    bson.ObjectId `bson:"user_id" json:"user_id" `
 		UserMail  string        `bson:"user_mail" json:"user_mail"`
 		UserPhone string        `bson:"user_phone" json:"user_phone"`
-	} `bson:"user"  `
+	} `bson:"user_infos"  `
 }
 
 //StockView beacon verileri stock ekranın için hazırlanması
 type StockView struct {
 	UUID  string ` json:"uuid"`
-	ID    int    `json:"id"`
 	Major int    ` json:"major"`
 	Minor int    ` json:"minor"`
 }
@@ -106,16 +105,26 @@ type Log struct {
 //LostBeacon Kayıp beacon verileri için gerekli yapı
 type LostBeacon struct {
 	bongo.DocumentBase `bson:",inline"`
-	BeaconID           bson.ObjectId `bson:"beacon_id" json:"beacon_id" `
-	LostStatus         byte          `bson:"lost_status" json:"lost_status" `
-	LostDate           string        `bson:"lost_date" json:"lost_date" `
-	LostLat            float64       `bson:"lost_lat" json:"lost_lat" `
-	LostLong           float64       `bson:"lost_long" json:"lost_long" `
+	LostStatus         byte    `bson:"lost_status" json:"lost_status" `
+	LostDate           string  `bson:"lost_date" json:"lost_date" `
+	LostLat            float64 `bson:"lost_lat" json:"lost_lat" `
+	LostLong           float64 `bson:"lost_long" json:"lost_long" `
+	LostDesc           string  `bson:"lost_description" json:"lost_description" `
 	UserInfos          struct {
 		UserID    bson.ObjectId `bson:"user_id" json:"user_id" `
 		UserMail  string        `bson:"user_mail" json:"user_mail"`
 		UserPhone string        `bson:"user_phone" json:"user_phone"`
 	} `bson:"user_infos"  `
+	BeaconInfos struct {
+		BeaconID   bson.ObjectId `bson:"beacon_id" json:"beacon_id" `
+		BeaconName string        `bson:"beacon_name" json:"beacon_name"`
+		UUID       string        `bson:"uuid" json:"uuid"`
+		Major      int           `bson:"major" json:"major"`
+		Minor      int           `bson:"minor" json:"minor"`
+		Variance   int           `bson:"variance" json:"variance"`
+		BeaconType int           `bson:"type" json:"type"`
+		LastSeen   time.Time     `bson:"last_seen" json:"last_seen"`
+	} `bson:"beacon_infos"  `
 }
 
 //Products Ürün verileri için gerekli yapı
@@ -177,7 +186,7 @@ type MyDevicesDetail struct {
 
 //MyDevicesDetailAndInfos cihazın ve kişinin gerekli bilgileri
 type MyDevicesDetailAndInfos struct {
-	ID         bson.ObjectId ` json:"id"`
+	BeaconID   bson.ObjectId ` json:"beacon_id"`
 	BeaconName string        ` json:"beacon_name"`
 	UserMail   string        ` json:"user_mail"`
 	UserPhone  string        ` json:"user_phone"`
@@ -188,4 +197,5 @@ type LostBeaconInApp struct {
 	LostDate time.Time `json:"lost_date" `
 	LostLat  float64   `json:"lost_lat" `
 	LostLong float64   `json:"lost_long" `
+	LostDesc string    `json:"lost_desc" `
 }

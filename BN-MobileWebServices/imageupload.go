@@ -2,64 +2,63 @@ package main
 
 import (
 	"encoding/base64"
-	"fmt"
 	"os"
-	"time"
-
-	"github.com/globalsign/mgo/bson"
 )
 
-func uploadImage(bs64 string, getID string) {
-	//conroltID := checkObjID(getID)
-	beacon := &Beacon{}
-
-	var image = base64ToImage(bs64)
-	saveControl, pathImg := saveImage(image, getID)
-	result := connection.Collection("beacons").FindOne(bson.M{"infos.uuid": getID}, beacon)
-	if result != nil {
-		fmt.Println(result.Error())
-	} else {
-		if saveControl == true {
-			beacon.Information.Image = pathImg
-			connection.Collection("beacons").Save(beacon)
+func uploadImage(bs64 string, getID string, imgDesc string) (bool, string) {
+	image, controlImgBase64 := base64ToImage(bs64)
+	if controlImgBase64 == false {
+		return false, "Base64"
+	}
+	saveControl, pathImg := saveImage(image, getID, imgDesc)
+	if saveControl == false {
+		if pathImg == "File" {
+			return false, "File"
+		} else if pathImg == "Remove" {
+			return false, "Remove"
+		} else if pathImg == "Create" {
+			return false, "Create"
+		} else if pathImg == "Write" {
+			return false, "Write"
+		} else if pathImg == "Sync" {
+			return false, "Sync"
 		}
 	}
-
+	return true, pathImg
 }
 
-func base64ToImage(bs64 string) []byte {
+func base64ToImage(bs64 string) ([]byte, bool) {
 	dec, err := base64.StdEncoding.DecodeString(bs64)
 	if err != nil {
-		panic(err)
+		return nil, false
 	}
-
-	return dec
+	return dec, true
 }
 
-func saveImage(img []byte, ID string) (bool, string) {
+func saveImage(img []byte, ID string, imgDesc string) (bool, string) {
 
-	loc, _ := time.LoadLocation("Asia/Istanbul")
-	now := time.Now().In(loc).Format("2006_01_02_15_04_05")
+	pathImg := "beacons-images/" + ID + "." + imgDesc
 
-	var pathImg = "../beacons-images/" + ID + "_" + now + ".jpg"
+	controlFile, err := fileExists(pathImg)
+	if err != nil {
+		return false, "File"
+	}
+	if controlFile == true {
+		err := os.Remove(pathImg)
+		if err != nil {
+			return false, "Remove"
+		}
+	}
 	f, err := os.Create(pathImg)
 	if err != nil {
-		fmt.Println(err.Error())
-		return false, "false"
+		return false, "Create"
 	}
-	defer f.Close()
-
 	if _, err := f.Write(img); err != nil {
-		fmt.Println(err.Error())
-		return false, "false"
-
+		return false, "Write"
 	}
 	if err := f.Sync(); err != nil {
-
-		fmt.Println(err.Error())
-		return false, "false"
-
+		return false, "Sync"
 	}
-	pathImg = "beacons-images/" + ID + "_" + now + ".jpg"
+	defer f.Close()
 	return true, pathImg
 }

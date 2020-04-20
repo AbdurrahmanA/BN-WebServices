@@ -76,7 +76,7 @@ func updateProfile(name string, surname string, mail string, phone string, img s
 		if getPhone != phone {
 			checkphone = checkPhone(phone)
 		}
-		imgPathControl, imgPath := uploadImage(img, conroltID, imgDesc)
+		imgPathControl, imgPath := uploadImage(img, conroltID, imgDesc, 0)
 		if imgPathControl != true {
 			return false, imgPath
 		}

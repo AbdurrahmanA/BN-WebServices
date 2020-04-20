@@ -55,6 +55,9 @@ func addProduct(token string, proDes string, proName string, proPrice string, pr
 	if perForAdd == false {
 		return false, "Token"
 	}
+	if proTypeInt > 4 || proTypeInt < 0 {
+		return false, "Ürüntipi"
+	}
 	device := &ProductsForAdd{
 		ProductDescription: proDes,
 		ProductName:        proName,

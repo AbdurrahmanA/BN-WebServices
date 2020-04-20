@@ -41,7 +41,11 @@ func getMyDeviceDetails(getID string) ([]byte, string) {
 			return data, "NotFound"
 		}
 		var beaconType = checkBeaconType(beacon.Information.BeaconType)
-		beacons := &MyDevicesDetail{beacon.Information.BeaconName, beaconType, beacon.Information.Variance, beacon.Information.Image}
+		beaconImg := ""
+		if beacon.Information.Image != "" {
+			beaconImg = "http://213.14.182.224:8090/" + beacon.Information.Image
+		}
+		beacons := &MyDevicesDetail{beacon.Information.BeaconName, beacon.Information.UUID, beaconType, beacon.Information.Variance, beaconImg}
 		data, _ = json.Marshal(beacons)
 		return addError(data), ""
 	}

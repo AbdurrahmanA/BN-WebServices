@@ -23,7 +23,7 @@ func main() {
 	mux.HandleFunc("/stocks", stockViewPage)
 	mux.HandleFunc("/addbeacon", addBeaconPage)
 	mux.HandleFunc("/changepassword", passwordChangePage)
-
+	mux.Handle("/", http.StripPrefix("/beacons-images", http.FileServer(http.Dir("beacons-images"))))
 	handler := cors.Default().Handler(mux)
 
 	http.ListenAndServe(":8090", handler)

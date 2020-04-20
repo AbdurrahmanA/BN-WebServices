@@ -60,7 +60,7 @@ func controlDeviceInfo(name string, variance string, img string, imgDesc string,
 		if err != nil {
 			return false, "Nil"
 		}
-		imgPathControl, imgPath := uploadImage(img, conroltID, imgDesc)
+		imgPathControl, imgPath := uploadImage(img, conroltID, imgDesc, 1)
 		if imgPathControl == false {
 			return false, imgPath
 		}

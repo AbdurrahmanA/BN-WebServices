@@ -11,7 +11,7 @@ import (
 
 func addLostDevicePage(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
-		var creatLostDevice, control = addLostDeviceControl(r.FormValue("phone"), r.FormValue("email"), r.FormValue("creditCardNo"), r.FormValue("creditCardFullName"), r.FormValue("creditCardExDate"), r.FormValue("cvv"), r.FormValue("lastSeen"), r.FormValue("lostLat"), r.FormValue("lostLong"), r.FormValue("beaconID"))
+		var creatLostDevice, control = addLostDeviceControl(r.FormValue("phone"), r.FormValue("email"), r.FormValue("creditCardNo"), r.FormValue("creditCardFullName"), r.FormValue("creditCardExDate"), r.FormValue("cvv"), r.FormValue("lastSeen"), r.FormValue("lostLat"), r.FormValue("lostLong"), r.FormValue("beaconID"), r.FormValue("lostDesc"))
 		if r.FormValue("phone") == "" {
 			writeResponse(w, requiredInputError("Telefon numarası"))
 		} else if r.FormValue("email") == "" {
@@ -30,6 +30,8 @@ func addLostDevicePage(w http.ResponseWriter, r *http.Request) {
 			writeResponse(w, requiredInputError("lostLat"))
 		} else if r.FormValue("lostLong") == "" {
 			writeResponse(w, requiredInputError("lostLong"))
+		} else if r.FormValue("lostDesc") == "" {
+			writeResponse(w, requiredInputError("Açıklama"))
 		} else if r.FormValue("beaconID") == "" {
 			writeResponse(w, requiredInputError("Cihaz numarası"))
 		} else {
@@ -40,13 +42,14 @@ func addLostDevicePage(w http.ResponseWriter, r *http.Request) {
 					writeResponse(w, creditCardError())
 				} else if control == "NotFound" {
 					writeResponse(w, notFindRecordError())
-
 				} else if control == "Save" {
 					writeResponse(w, dataBaseSaveError())
-
+				} else if control == "Phone" {
+					writeResponse(w, incorrectInput("Phone"))
+				} else if control == "Mail" {
+					writeResponse(w, incorrectInput("Mail"))
 				} else if control == "ID" {
 					writeResponse(w, objectIDError())
-
 				} else {
 					writeResponse(w, someThingWentWrong())
 				}
@@ -56,7 +59,7 @@ func addLostDevicePage(w http.ResponseWriter, r *http.Request) {
 		writeResponse(w, notValidRequestError(r.Method))
 	}
 }
-func addLostDeviceControl(phone string, email string, creditCardNo string, creditCardFullName string, creditCardExDate string, cvv string, lastSeen string, lostLat string, lostLong string, beaconID string) (bool, string) {
+func addLostDeviceControl(phone string, email string, creditCardNo string, creditCardFullName string, creditCardExDate string, cvv string, lastSeen string, lostLat string, lostLong string, beaconID string, lostDesc string) (bool, string) {
 	beacon := &Beacon{}
 	fullDate := strings.Split(creditCardExDate, "/")
 	card := creditcard.Card{Number: creditCardNo, Cvv: cvv, Month: fullDate[0], Year: fullDate[1]}
@@ -70,6 +73,14 @@ func addLostDeviceControl(phone string, email string, creditCardNo string, credi
 		if errBeacon != nil {
 			return false, "NotFound"
 		}
+		controlPhone := checkPhoneNumber(phone)
+		if controlPhone != true {
+			return false, "Phone"
+		}
+		controlEmail := checkEmailValidity(email)
+		if controlEmail != true {
+			return false, "Mail"
+		}
 		floatLostLat, _ := strconv.ParseFloat(lostLat, 64)
 		floatLostLong, _ := strconv.ParseFloat(lostLong, 64)
 
@@ -79,6 +90,9 @@ func addLostDeviceControl(phone string, email string, creditCardNo string, credi
 			LostLat:    floatLostLat,
 			LostLong:   floatLostLong,
 		}
+		lostDevice.LostDesc = lostDesc
+		lostDevice.UserInfos.UserMail = email
+		lostDevice.UserInfos.UserPhone = phone
 		lostDevice.BeaconInfos.BeaconID = beacon.Id
 		lostDevice.UserInfos.UserID = beacon.UserInfos.UserID
 		errs := connection.Collection("lost_beacons").Save(lostDevice)

@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"net/http"
+	"time"
 
 	"github.com/globalsign/mgo/bson"
 )
@@ -43,7 +44,8 @@ func getMyDeviceDetails(getID string) ([]byte, string) {
 		var beaconType = checkBeaconType(beacon.Information.BeaconType)
 		beaconImg := ""
 		if beacon.Information.Image != "" {
-			beaconImg = "http://213.14.182.224:8090/" + beacon.Information.Image
+			dt := time.Now()
+			beaconImg = "http://213.14.182.224:8090/" + beacon.Information.Image + "?day=" + dt.Format("01-02-2006") + "?hour=" + dt.Format("15:04:05")
 		}
 		beacons := &MyDevicesDetail{beacon.Information.BeaconName, beacon.Information.UUID, beaconType, beacon.Information.Variance, beaconImg}
 		data, _ = json.Marshal(beacons)

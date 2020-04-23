@@ -50,6 +50,8 @@ func getProfileInfos(token string) ([]byte, string) {
 		person.UserInfos.UserPassword,
 		person.UserInfos.UserMail,
 		person.UserInfos.Image,
+		person.Contacts.UserAddress,
+		person.UserInfos.RoleLvl,
 	}
 	data, _ = json.Marshal(user)
 	return addError(data), ""

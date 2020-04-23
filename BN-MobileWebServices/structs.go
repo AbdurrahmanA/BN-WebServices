@@ -169,6 +169,8 @@ type UserInfoInApp struct {
 	UserPassword string        `json:"user_password" `
 	UserMail     string        `json:"user_mail"`
 	Image        string        `json:"user_img"`
+	UserAddress  string        `json:"user_address"`
+	RoleLvl      int           `json:"role_lvl"`
 }
 
 //MyDevices kullanıcının cihazlarının bilgisi

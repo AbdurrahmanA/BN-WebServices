@@ -13,8 +13,14 @@ func registerPage(w http.ResponseWriter, r *http.Request) {
 			writeResponse(w, requiredInputError("Şifre"))
 		} else if r.FormValue("password_again") == "" {
 			writeResponse(w, requiredInputError("Şifre tekrar"))
+		} else if r.FormValue("name") == "" {
+			writeResponse(w, requiredInputError("Şifre tekrar"))
+		} else if r.FormValue("surname") == "" {
+			writeResponse(w, requiredInputError("Şifre tekrar"))
+		} else if r.FormValue("phone") == "" {
+			writeResponse(w, requiredInputError("Şifre tekrar"))
 		} else {
-			var user, control = register(r.FormValue("email"), r.FormValue("password"), r.FormValue("password_again"))
+			var user, control = register(r.FormValue("email"), r.FormValue("password"), r.FormValue("password_again"), r.FormValue("name"), r.FormValue("surname"), r.FormValue("phone"))
 			if user == true {
 				writeResponse(w, succesfullyRecordedError())
 			} else {
@@ -22,7 +28,6 @@ func registerPage(w http.ResponseWriter, r *http.Request) {
 					writeResponse(w, incorrectInput("Şifreler"))
 				} else if control == "Save" {
 					writeResponse(w, dataBaseSaveError())
-
 				} else if control == "SendMail" {
 					writeResponse(w, sendMailError())
 				} else if control == "Mail" {
@@ -39,7 +44,7 @@ func registerPage(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func register(userMail string, userPassword string, userPasswordAgain string) (bool, string) {
+func register(userMail string, userPassword string, userPasswordAgain string, name string, surname string, phone string) (bool, string) {
 	person := &Person{}
 
 	if userPassword != userPasswordAgain {
@@ -53,11 +58,18 @@ func register(userMail string, userPassword string, userPasswordAgain string) (b
 	if checkMail == false {
 		return false, "MailData"
 	}
+	checkPhone := checkPhoneNumber(phone)
+	if checkPhone == false {
+		return false, "Phone"
+	}
 	tokenReg := tokenGenerator()
 	person.UserInfos.UserMail = userMail
 	person.UserInfos.UserPassword = userPassword
 	person.UserInfos.UserToken = tokenReg
 	person.UserInfos.RoleLvl = 0
+	person.Contacts.UserPhone = phone
+	person.Contacts.UserRealName = name
+	person.Contacts.UserSurname = surname
 	errs := connection.Collection("users").Save(person)
 	if errs != nil {
 		fmt.Println(errs.Error())

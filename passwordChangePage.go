@@ -8,7 +8,6 @@ import (
 
 func passwordChangePage(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "PUT" {
-		var update, control = passwordChange(r.FormValue("oldPass"), r.FormValue("newPass"), r.FormValue("newPassAgain"), r.FormValue("id"))
 		if r.FormValue("oldPass") == "" {
 			writeResponse(w, requiredInputError("Eski Parola"))
 		} else if r.FormValue("newPass") == "" {
@@ -18,6 +17,7 @@ func passwordChangePage(w http.ResponseWriter, r *http.Request) {
 		} else if r.FormValue("id") == "" {
 			writeResponse(w, requiredInputError("Kullanıcı Numarası"))
 		} else {
+			var update, control = passwordChange(r.FormValue("oldPass"), r.FormValue("newPass"), r.FormValue("newPassAgain"), r.FormValue("id"))
 			if update == true {
 				writeResponse(w, succesfullyRecordedError())
 			} else {

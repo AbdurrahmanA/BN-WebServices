@@ -8,7 +8,6 @@ import (
 
 func updateProfilePage(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "PUT" {
-		var update, control = updateProfile(r.FormValue("name"), r.FormValue("surname"), r.FormValue("email"), r.FormValue("phone"), r.FormValue("img"), r.FormValue("imgDesc"), r.FormValue("id"))
 		if r.FormValue("name") == "" {
 			writeResponse(w, requiredInputError("İsim"))
 		} else if r.FormValue("surname") == "" {
@@ -24,6 +23,7 @@ func updateProfilePage(w http.ResponseWriter, r *http.Request) {
 		} else if r.FormValue("id") == "" {
 			writeResponse(w, requiredInputError("Kullanıcı Numarası"))
 		} else {
+			var update, control = updateProfile(r.FormValue("name"), r.FormValue("surname"), r.FormValue("email"), r.FormValue("phone"), r.FormValue("img"), r.FormValue("imgDesc"), r.FormValue("id"))
 			if update == true {
 				writeResponse(w, succesfullyRecordedError())
 			} else {

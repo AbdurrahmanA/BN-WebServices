@@ -105,7 +105,7 @@ type Log struct {
 //LostBeacon Kayıp beacon verileri için gerekli yapı
 type LostBeacon struct {
 	bongo.DocumentBase `bson:",inline"`
-	LostStatus         byte    `bson:"lost_status" json:"lost_status" `
+	LostStatus         bool    `bson:"lost_status" json:"lost_status" `
 	LostDate           string  `bson:"lost_date" json:"lost_date" `
 	LostLat            float64 `bson:"lost_lat" json:"lost_lat" `
 	LostLong           float64 `bson:"lost_long" json:"lost_long" `
@@ -201,8 +201,19 @@ type MyDevicesDetailAndInfos struct {
 
 //LostBeaconInApp kayıp cihaz bilgileri
 type LostBeaconInApp struct {
-	LostDate time.Time `json:"lost_date" `
-	LostLat  float64   `json:"lost_lat" `
-	LostLong float64   `json:"lost_long" `
-	LostDesc string    `json:"lost_desc" `
+	LostDate   time.Time `json:"lost_date" `
+	LostLat    float64   `json:"lost_lat" `
+	LostLong   float64   `json:"lost_long" `
+	LostDesc   string    `json:"lost_desc" `
+	LostStatus bool      `json:"lost_status" `
+}
+
+//FindLostBeacon kayıp cihazların sorgulanamsı için gerekili yapı
+type FindLostBeacon struct {
+	BeaconName string        ` json:"beacon_name"`
+	UUID       string        ` json:"uuid"`
+	UserID     bson.ObjectId `json:"user_id" `
+	UserPhone  string        `json:"user_phone" `
+	UserMail   string        `json:"user_mail"`
+	LostStatus bool          `json:"lost_status"`
 }

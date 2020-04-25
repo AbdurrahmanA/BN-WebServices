@@ -9,7 +9,6 @@ import (
 
 func updateDevicePage(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "PUT" {
-		var update, control = controlDeviceInfo(r.FormValue("name"), r.FormValue("variance"), r.FormValue("img"), r.FormValue("imgDesc"), r.FormValue("beaconID"))
 		if r.FormValue("name") == "" {
 			writeResponse(w, requiredInputError("İsim"))
 		} else if r.FormValue("variance") == "" {
@@ -21,6 +20,7 @@ func updateDevicePage(w http.ResponseWriter, r *http.Request) {
 		} else if r.FormValue("beaconID") == "" {
 			writeResponse(w, requiredInputError("Cihaz numarası"))
 		} else {
+			var update, control = controlDeviceInfo(r.FormValue("name"), r.FormValue("variance"), r.FormValue("img"), r.FormValue("imgDesc"), r.FormValue("beaconID"))
 			if update == true {
 				writeResponse(w, succesfullyRecordedError())
 			} else {

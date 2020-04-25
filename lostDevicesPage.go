@@ -38,7 +38,7 @@ func getLostDeviceList(id string) ([]byte, string) {
 		beacon := &LostBeacon{}
 		lostBeacon := connection.Collection("lost_beacons").Find(bson.M{"user_infos.user_id": bson.ObjectIdHex(controlID)})
 		for lostBeacon.Next(beacon) {
-			beaconInfo = &LostBeaconInApp{beacon.Created, beacon.LostLat, beacon.LostLong, beacon.LostDesc, beacon.LostStatus}
+			beaconInfo = &LostBeaconInApp{beacon.BeaconInfos.BeaconID, beacon.UserInfos.UserPhone, beacon.UserInfos.UserMail, beacon.Created, beacon.LostLat, beacon.LostLong, beacon.LostDesc, beacon.LostStatus}
 			l = append(l, beaconInfo)
 		}
 		if l == nil {

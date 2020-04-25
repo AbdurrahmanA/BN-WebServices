@@ -201,11 +201,14 @@ type MyDevicesDetailAndInfos struct {
 
 //LostBeaconInApp kayıp cihaz bilgileri
 type LostBeaconInApp struct {
-	LostDate   time.Time `json:"lost_date" `
-	LostLat    float64   `json:"lost_lat" `
-	LostLong   float64   `json:"lost_long" `
-	LostDesc   string    `json:"lost_desc" `
-	LostStatus bool      `json:"lost_status" `
+	BeaconID   bson.ObjectId `json:"beacon_id" `
+	UserPhone  string        `json:"user_phone" `
+	UserMail   string        `json:"user_mail"`
+	LostDate   time.Time     `json:"lost_date" `
+	LostLat    float64       `json:"lost_lat" `
+	LostLong   float64       `json:"lost_long" `
+	LostDesc   string        `json:"lost_desc" `
+	LostStatus bool          `json:"lost_status" `
 }
 
 //FindLostBeacon kayıp cihazların sorgulanamsı için gerekili yapı

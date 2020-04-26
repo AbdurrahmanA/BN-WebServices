@@ -65,7 +65,7 @@ func register(userMail string, userPassword string, userPasswordAgain string, na
 	tokenReg := tokenGenerator()
 	person.UserInfos.UserMail = userMail
 	person.UserInfos.UserPassword = userPassword
-	person.UserInfos.UserToken = tokenReg
+	person.UserInfos.UserWebToken = tokenReg
 	person.UserInfos.RoleLvl = 0
 	person.Contacts.UserPhone = phone
 	person.Contacts.UserRealName = name

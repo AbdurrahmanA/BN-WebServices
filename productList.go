@@ -11,9 +11,7 @@ func productsListPage(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		var products, control = productsList(r.FormValue("token"))
 		if products == nil {
-			if control == "Token" {
-				writeResponse(w, invalidPermission())
-			} else if control == "Nil" {
+			if control == "Nil" {
 				writeResponse(w, notFindRecordError())
 			} else {
 				writeResponse(w, someThingWentWrong())
@@ -44,5 +42,5 @@ func productsList(token string) ([]byte, string) {
 		data, _ = json.Marshal(response)
 		return addError(data), ""
 	}
-	return data, "Token"
+	return data, ""
 }

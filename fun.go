@@ -64,7 +64,7 @@ func addError(byteJSON []byte) []byte {
 }
 func checkPermission(token string) bool {
 	person := &Person{}
-	connection.Collection("users").FindOne(bson.M{"user_infos.user_token": token}, person)
+	connection.Collection("users").FindOne(bson.M{"user_infos.user_web_token": token}, person)
 	if person.UserInfos.RoleLvl == 5 {
 		return true
 	}

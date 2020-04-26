@@ -17,11 +17,12 @@ type Person struct {
 		UserPhone    string `bson:"user_phone" json:"user_phone"`
 	} `bson:"contact_infos"  `
 	UserInfos struct {
-		UserPassword string `bson:"user_password" json:"user_password"`
-		UserMail     string `bson:"user_mail" json:"user_mail"`
-		UserToken    string `bson:"user_token" json:"user_token"`
-		RoleLvl      int    `bson:"role_lvl" json:"role_lvl"`
-		Image        string `bson:"img" json:"img"`
+		UserPassword   string `bson:"user_password" json:"user_password"`
+		UserMail       string `bson:"user_mail" json:"user_mail"`
+		UserWebToken   string `bson:"user_web_token" json:"user_web_token"`
+		UserMobilToken string `bson:"user_mobile_token" json:"user_mobile_token"`
+		RoleLvl        int    `bson:"role_lvl" json:"role_lvl"`
+		Image          string `bson:"img" json:"img"`
 	} `bson:"user_infos"  `
 }
 

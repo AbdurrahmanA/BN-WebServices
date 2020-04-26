@@ -11,8 +11,10 @@ func profilePage(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		if r.FormValue("token") == "" {
 			writeResponse(w, requiredInputError("Anahtar"))
+		} else if r.FormValue("tokenType") == "" {
+			writeResponse(w, requiredInputError("tokenType"))
 		} else {
-			var user, control = getProfileInfos(r.FormValue("token"))
+			var user, control = getProfileInfos(r.FormValue("token"), r.FormValue("tokenType"))
 			if user == nil {
 				if control == "Lvl" {
 					writeResponse(w, invalidLoginRequest())
@@ -30,13 +32,22 @@ func profilePage(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func getProfileInfos(token string) ([]byte, string) {
+func getProfileInfos(token string, tokenType string) ([]byte, string) {
 	var data []byte
 
 	person := &Person{}
-	err := connection.Collection("users").FindOne(bson.M{"user_infos.user_token": token}, person)
-	if err != nil {
-		return data, "NotFound"
+	if tokenType == "web" {
+		err := connection.Collection("users").FindOne(bson.M{"user_infos.user_web_token": token}, person)
+		if err != nil {
+			return data, "NotFound"
+		}
+	} else if tokenType == "mobil" {
+		err := connection.Collection("users").FindOne(bson.M{"user_infos.user_mobile_token": token}, person)
+		if err != nil {
+			return data, "NotFound"
+		}
+	} else {
+		return data, "tokenType"
 	}
 	lvl := person.UserInfos.RoleLvl
 	if lvl == 0 {

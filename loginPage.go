@@ -13,8 +13,10 @@ func loginPage(w http.ResponseWriter, r *http.Request) {
 			writeResponse(w, requiredInputError("E-posta"))
 		} else if r.FormValue("password") == "" {
 			writeResponse(w, requiredInputError("Şifre"))
+		} else if r.FormValue("loginType") == "" {
+			writeResponse(w, requiredInputError("loginType"))
 		} else {
-			var user, control = findUser(r.FormValue("email"), r.FormValue("password"))
+			var user, control = findUser(r.FormValue("email"), r.FormValue("password"), r.FormValue("loginType"))
 			if control == "Login" {
 				writeResponse(w, string(user))
 			} else if control == "Notfound" {
@@ -37,7 +39,7 @@ func loginPage(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func findUser(userMail string, userPassword string) ([]byte, string) {
+func findUser(userMail string, userPassword string, loginType string) ([]byte, string) {
 	person := &Person{}
 	var data []byte
 	controlMail := checkEmailValidity(userMail)
@@ -52,12 +54,28 @@ func findUser(userMail string, userPassword string) ([]byte, string) {
 	if lvl == 0 {
 		return data, "Lvl"
 	}
-	person.UserInfos.UserToken = tokenGenerator()
-	connection.Collection("users").Save(person)
-	user := &Userjon{person.UserInfos.UserToken}
-	data, err = json.Marshal(user)
-	if err != nil {
-		return data, "Parse"
+	if loginType == "web" {
+
+		person.UserInfos.UserWebToken = tokenGenerator()
+		connection.Collection("users").Save(person)
+		user := &Userjon{person.UserInfos.UserWebToken}
+		data, err = json.Marshal(user)
+		if err != nil {
+			return data, "Parse"
+		}
+		return addError(data), "Login"
+	} else if loginType == "mobil" {
+
+		person.UserInfos.UserMobilToken = tokenGenerator()
+		connection.Collection("users").Save(person)
+		user := &Userjon{person.UserInfos.UserMobilToken}
+		data, err = json.Marshal(user)
+		if err != nil {
+			return data, "Parse"
+		}
+		return addError(data), "Login"
+	} else {
+		return data, "loginType"
 	}
-	return addError(data), "Login"
+
 }

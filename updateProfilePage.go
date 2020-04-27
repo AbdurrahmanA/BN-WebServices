@@ -79,7 +79,8 @@ func updateProfile(name string, surname string, mail string, phone string, img s
 		}
 		imgPath := person.UserInfos.Image
 		if img != "null" && imgDesc != "null" {
-			imgPathControl, imgPath := uploadImage(img, conroltID, imgDesc, 0)
+			imgPathControl := false
+			imgPathControl, imgPath = uploadImage(img, conroltID, imgDesc, 0)
 			if imgPathControl != true {
 				return false, imgPath
 			}

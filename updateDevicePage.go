@@ -63,7 +63,8 @@ func controlDeviceInfo(name string, variance string, img string, imgDesc string,
 		}
 		imgPath := device.Information.Image
 		if img != "null" && imgDesc != "null" {
-			imgPathControl, imgPath := uploadImage(img, conroltID, imgDesc, 1)
+			imgPathControl := false
+			imgPathControl, imgPath = uploadImage(img, conroltID, imgDesc, 1)
 			if imgPathControl == false {
 				return false, imgPath
 			}

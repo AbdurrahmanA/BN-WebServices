@@ -72,7 +72,7 @@ func addLostDeviceControl(phone string, email string, creditCardNo string, credi
 	beaconID, errID := checkObjID(beaconID)
 	if errID == true {
 		lostDeviceControl := &LostBeacon{}
-		err := connection.Collection("lost_beacons").FindOne(bson.M{"beacon_infos.beacon_id": bson.ObjectIdHex(beaconID)}, lostDeviceControl)
+		err := connection.Collection("lost_beacons").FindOne(bson.M{"beacon_infos.beacon_id": bson.ObjectIdHex(beaconID), "lost_status": true}, lostDeviceControl)
 		if err != nil {
 			return false, "NotFound"
 		}

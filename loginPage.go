@@ -64,7 +64,7 @@ func findUser(userMail string, userPassword string, loginType string) ([]byte, s
 			return data, "Parse"
 		}
 		return addError(data), "Login"
-	} else if loginType == "mobile" {
+	} else if loginType == "mobil" {
 
 		person.UserInfos.UserMobilToken = tokenGenerator()
 		connection.Collection("users").Save(person)

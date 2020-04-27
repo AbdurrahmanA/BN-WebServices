@@ -41,7 +41,7 @@ func getProfileInfos(token string, tokenType string) ([]byte, string) {
 		if err != nil {
 			return data, "NotFound"
 		}
-	} else if tokenType == "mobile" {
+	} else if tokenType == "mobil" {
 		err := connection.Collection("users").FindOne(bson.M{"user_infos.user_mobile_token": token}, person)
 		if err != nil {
 			return data, "NotFound"

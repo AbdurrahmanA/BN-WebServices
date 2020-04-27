@@ -50,6 +50,8 @@ func addLostDevicePage(w http.ResponseWriter, r *http.Request) {
 					writeResponse(w, incorrectInput("Mail"))
 				} else if control == "ID" {
 					writeResponse(w, objectIDError())
+				} else if control == "Already" {
+					writeResponse(w, alreadyDefinedError("BeaconID"))
 				} else {
 					writeResponse(w, someThingWentWrong())
 				}
@@ -69,6 +71,14 @@ func addLostDeviceControl(phone string, email string, creditCardNo string, credi
 	}
 	beaconID, errID := checkObjID(beaconID)
 	if errID == true {
+		lostDeviceControl := &LostBeacon{}
+		err := connection.Collection("lost_beacons").FindOne(bson.M{"beacon_infos.beacon_id": bson.ObjectIdHex(beaconID)}, lostDeviceControl)
+		if err != nil {
+			return false, "NotFound"
+		}
+		if lostDeviceControl.BeaconInfos.BeaconID == bson.ObjectIdHex(beaconID) {
+			return false, "Already"
+		}
 		errBeacon := connection.Collection("beacons").FindById(bson.ObjectIdHex(beaconID), beacon)
 		if errBeacon != nil {
 			return false, "NotFound"
@@ -81,6 +91,7 @@ func addLostDeviceControl(phone string, email string, creditCardNo string, credi
 		if controlEmail != true {
 			return false, "Mail"
 		}
+
 		floatLostLat, _ := strconv.ParseFloat(lostLat, 64)
 		floatLostLong, _ := strconv.ParseFloat(lostLong, 64)
 

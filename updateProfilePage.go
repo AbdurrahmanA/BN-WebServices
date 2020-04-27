@@ -63,6 +63,7 @@ func updateProfile(name string, surname string, mail string, phone string, img s
 	person := &Person{}
 	var checkmail = true
 	var checkphone = true
+
 	if errID == true {
 		err := connection.Collection("users").FindById(bson.ObjectIdHex(conroltID), person)
 		if err != nil {
@@ -76,9 +77,12 @@ func updateProfile(name string, surname string, mail string, phone string, img s
 		if getPhone != phone {
 			checkphone = checkPhone(phone)
 		}
-		imgPathControl, imgPath := uploadImage(img, conroltID, imgDesc, 0)
-		if imgPathControl != true {
-			return false, imgPath
+		imgPath := person.UserInfos.Image
+		if img != "null" && imgDesc != "null" {
+			imgPathControl, imgPath := uploadImage(img, conroltID, imgDesc, 0)
+			if imgPathControl != true {
+				return false, imgPath
+			}
 		}
 		if checkmail == true && checkphone == true {
 			err := connection.Collection("users").FindById(bson.ObjectIdHex(conroltID), person)

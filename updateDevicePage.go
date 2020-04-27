@@ -55,14 +55,18 @@ func updateDevicePage(w http.ResponseWriter, r *http.Request) {
 func controlDeviceInfo(name string, variance string, img string, imgDesc string, beaconID string) (bool, string) {
 	device := &Beacon{}
 	conroltID, errID := checkObjID(beaconID)
+
 	if errID == true {
 		err := connection.Collection("beacons").FindById(bson.ObjectIdHex(conroltID), device)
 		if err != nil {
 			return false, "Nil"
 		}
-		imgPathControl, imgPath := uploadImage(img, conroltID, imgDesc, 1)
-		if imgPathControl == false {
-			return false, imgPath
+		imgPath := device.Information.Image
+		if img != "null" && imgDesc != "null" {
+			imgPathControl, imgPath := uploadImage(img, conroltID, imgDesc, 1)
+			if imgPathControl == false {
+				return false, imgPath
+			}
 		}
 		newVariance, _ := strconv.Atoi(variance)
 		device.Information.BeaconName = name

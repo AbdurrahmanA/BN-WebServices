@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"net/http"
+	"time"
 
 	"github.com/globalsign/mgo/bson"
 )
@@ -53,6 +54,11 @@ func getProfileInfos(token string, tokenType string) ([]byte, string) {
 	if lvl == 0 {
 		return data, "Lvl"
 	}
+	personImg := ""
+	if person.UserInfos.Image != "" {
+		dt := time.Now()
+		personImg = "http://213.14.182.224:8090/" + person.UserInfos.Image + "?day=" + dt.Format("01-02-2006") + "?hour=" + dt.Format("15:04:05")
+	}
 	user := &UserInfoInApp{
 		person.Id,
 		person.Contacts.UserRealName,
@@ -60,7 +66,7 @@ func getProfileInfos(token string, tokenType string) ([]byte, string) {
 		person.Contacts.UserPhone,
 		person.UserInfos.UserPassword,
 		person.UserInfos.UserMail,
-		person.UserInfos.Image,
+		personImg,
 		person.Contacts.UserAddress,
 		person.UserInfos.RoleLvl,
 	}

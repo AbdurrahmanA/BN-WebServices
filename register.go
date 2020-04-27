@@ -14,11 +14,11 @@ func registerPage(w http.ResponseWriter, r *http.Request) {
 		} else if r.FormValue("password_again") == "" {
 			writeResponse(w, requiredInputError("Şifre tekrar"))
 		} else if r.FormValue("name") == "" {
-			writeResponse(w, requiredInputError("Şifre tekrar"))
+			writeResponse(w, requiredInputError("İsim"))
 		} else if r.FormValue("surname") == "" {
-			writeResponse(w, requiredInputError("Şifre tekrar"))
+			writeResponse(w, requiredInputError("Soy İsim"))
 		} else if r.FormValue("phone") == "" {
-			writeResponse(w, requiredInputError("Şifre tekrar"))
+			writeResponse(w, requiredInputError("Telefon"))
 		} else {
 			var user, control = register(r.FormValue("email"), r.FormValue("password"), r.FormValue("password_again"), r.FormValue("name"), r.FormValue("surname"), r.FormValue("phone"))
 			if user == true {
@@ -32,6 +32,8 @@ func registerPage(w http.ResponseWriter, r *http.Request) {
 					writeResponse(w, sendMailError())
 				} else if control == "Mail" {
 					writeResponse(w, incorrectInput("Mail"))
+				} else if control == "Phone" {
+					writeResponse(w, incorrectInput("Phone"))
 				} else if control == "MailData" {
 					writeResponse(w, alreadyDefinedError("Mail"))
 				} else {

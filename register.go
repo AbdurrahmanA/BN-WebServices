@@ -65,6 +65,10 @@ func register(userMail string, userPassword string, userPasswordAgain string, na
 		return false, "Phone"
 	}
 	tokenReg := tokenGenerator()
+	control := sendRegisterMail(tokenReg, userMail)
+	if control != true {
+		return false, "SendMail"
+	}
 	person.UserInfos.UserMail = userMail
 	person.UserInfos.UserPassword = userPassword
 	person.UserInfos.UserWebToken = tokenReg
@@ -77,9 +81,6 @@ func register(userMail string, userPassword string, userPasswordAgain string, na
 		fmt.Println(errs.Error())
 		return false, "Save"
 	}
-	control := sendRegisterMail(tokenReg, userMail)
-	if control != true {
-		return false, "SendMail"
-	}
+
 	return true, ""
 }

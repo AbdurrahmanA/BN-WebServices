@@ -34,7 +34,7 @@ func checkLostDevice(uuid string) (bool, string, []byte) {
 	var data []byte
 	lostDevice := &LostBeacon{}
 	var beaconInfo *FindLostBeacon
-	beacons := connection.Collection("lost_beacons").Find(bson.M{"beacon_infos.uuid": uuid})
+	beacons := connection.Collection("lost_beacons").Find(bson.M{"beacon_infos.uuid": uuid, "lost_status": true})
 	for beacons.Next(lostDevice) {
 		beaconInfo = &FindLostBeacon{lostDevice.BeaconInfos.BeaconName, lostDevice.BeaconInfos.UUID, lostDevice.UserInfos.UserID, lostDevice.UserInfos.UserPhone, lostDevice.UserInfos.UserMail, lostDevice.LostStatus}
 	}

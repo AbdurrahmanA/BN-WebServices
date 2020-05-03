@@ -61,7 +61,6 @@ func updateProfilePage(w http.ResponseWriter, r *http.Request) {
 func updateProfile(name string, surname string, phone string, img string, imgDesc string, id string) (bool, string) {
 	conroltID, errID := checkObjID(id)
 	person := &Person{}
-	var checkmail = true
 	var checkphone = true
 
 	if errID == true {
@@ -73,7 +72,7 @@ func updateProfile(name string, surname string, phone string, img string, imgDes
 		if getPhone != phone {
 			checkphone = checkPhone(phone)
 		}
-		if checkmail == true && checkphone == true {
+		if checkphone == true {
 			return false, "MailOrPhone"
 		}
 		err = connection.Collection("users").FindById(bson.ObjectIdHex(conroltID), person)

@@ -28,8 +28,6 @@ func updateProfilePage(w http.ResponseWriter, r *http.Request) {
 			} else {
 				if control == "Save" {
 					writeResponse(w, dataBaseSaveError())
-				} else if control == "Nil" {
-					writeResponse(w, failedRecordError())
 				} else if control == "MailOrPhone" {
 					writeResponse(w, alreadyDefinedError("Telefon numarası"))
 				} else if control == "ID" {
@@ -61,23 +59,20 @@ func updateProfilePage(w http.ResponseWriter, r *http.Request) {
 func updateProfile(name string, surname string, phone string, img string, imgDesc string, id string) (bool, string) {
 	conroltID, errID := checkObjID(id)
 	person := &Person{}
-	var checkphone = true
 
 	if errID == true {
 		err := connection.Collection("users").FindById(bson.ObjectIdHex(conroltID), person)
 		if err != nil {
-			return false, "Nil"
+			return false, "NotFound"
 		}
 		getPhone := person.Contacts.UserPhone
+		var checkphone = true
+
 		if getPhone != phone {
 			checkphone = checkPhone(phone)
 		}
-		if checkphone == true {
+		if checkphone == false {
 			return false, "MailOrPhone"
-		}
-		err = connection.Collection("users").FindById(bson.ObjectIdHex(conroltID), person)
-		if err != nil {
-			return false, "NotFound"
 		}
 		imgPath := person.UserInfos.Image
 		if img != "null" && imgDesc != "null" {

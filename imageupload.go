@@ -45,7 +45,6 @@ func saveImage(img []byte, ID string, imgDesc string, imgType int) (bool, string
 	if imgType == 1 {
 		pathImg = "beacons-images/" + ID + "." + imgDesc
 	}
-
 	controlFile, err := fileExists(pathImg)
 	if err != nil {
 		fmt.Println(err.Error())

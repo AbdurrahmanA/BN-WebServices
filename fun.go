@@ -89,7 +89,7 @@ func checkEmailValidity(email string) bool {
 	return false
 }
 func sendRegisterMail(token string, email string) bool {
-	url := "http://92.44.120.164:8090/registercontrol?token="
+	url := "http://213.14.182.224:8090/registercontrol?token="
 
 	temp := registerEmailTemplate(url + token)
 

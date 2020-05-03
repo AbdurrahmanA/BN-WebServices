@@ -17,13 +17,11 @@ func deviceDetailsPage(w http.ResponseWriter, r *http.Request) {
 			if devices == nil {
 				if control == "NotFound" {
 					writeResponse(w, notFindRecordError())
-
 				} else if control == "ID" {
 					writeResponse(w, objectIDError())
 				} else {
 					writeResponse(w, someThingWentWrong())
 				}
-
 			} else {
 				writeResponse(w, string(devices))
 			}

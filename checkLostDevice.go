@@ -13,16 +13,18 @@ func checkLostDevicePage(w http.ResponseWriter, r *http.Request) {
 			writeResponse(w, requiredInputError("UUID"))
 		} else {
 			var control, controlStr, devices = checkLostDevice(r.FormValue("uuid"))
-			if control == false {
-				if controlStr == "Parse" {
-					writeResponse(w, incorrectInput("Json Parse"))
-				} else if controlStr == "false" {
-					writeResponse(w, notFindRecordError())
-				} else {
-					writeResponse(w, someThingWentWrong())
-				}
-			} else {
+			if devices != nil {
 				writeResponse(w, string(devices))
+			} else {
+				if control == false {
+					if controlStr == "Parse" {
+						writeResponse(w, incorrectInput("Json Parse"))
+					} else if controlStr == "NotFound" {
+						writeResponse(w, notFindRecordError())
+					} else {
+						writeResponse(w, someThingWentWrong())
+					}
+				}
 			}
 		}
 	} else {
@@ -33,17 +35,13 @@ func checkLostDevicePage(w http.ResponseWriter, r *http.Request) {
 func checkLostDevice(uuid string) (bool, string, []byte) {
 	var data []byte
 	lostDevice := &LostBeacon{}
-	var beaconInfo *FindLostBeacon
-	beacons := connection.Collection("lost_beacons").Find(bson.M{"beacon_infos.uuid": uuid, "lost_status": true})
-	for beacons.Next(lostDevice) {
-		beaconInfo = &FindLostBeacon{lostDevice.BeaconInfos.BeaconName, lostDevice.BeaconInfos.UUID, lostDevice.UserInfos.UserID, lostDevice.UserInfos.UserPhone, lostDevice.UserInfos.UserMail, lostDevice.LostStatus}
+	err := connection.Collection("lost_beacons").FindOne(bson.M{"beacon_infos.uuid": uuid, "lost_status": true}, lostDevice)
+	if err != nil {
+		return false, "NotFound", data
 	}
-	if beaconInfo.LostStatus == true {
-		data, err := json.Marshal(beaconInfo)
-		if err != nil {
-			return false, "Parse", data
-		}
-		return true, "", data
+	data, err = json.Marshal(lostDevice)
+	if err != nil {
+		return false, "Parse", data
 	}
-	return false, "false", data
+	return true, "false", addError(data)
 }

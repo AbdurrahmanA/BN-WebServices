@@ -180,6 +180,7 @@ type MyDevices struct {
 	UUID       string        ` json:"uuid"`
 	BeaconName string        ` json:"beacon_name"`
 	BeaconType string        ` json:"type"`
+	Variance   int           ` json:"variance"`
 	Image      string        ` json:"img"`
 }
 

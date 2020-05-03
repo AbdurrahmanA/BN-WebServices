@@ -7,6 +7,7 @@ import (
 )
 
 func main() {
+	connection = conDb()
 	mux := http.NewServeMux()
 	mux.HandleFunc("/login", loginPage)
 	mux.HandleFunc("/updateprofile", updateProfilePage)

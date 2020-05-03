@@ -7,7 +7,7 @@ import (
 )
 
 func passwordChangePage(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "PUT" {
+	if r.Method == "PUT" || r.Method == "POST" {
 		if r.FormValue("oldPass") == "" {
 			writeResponse(w, requiredInputError("Eski Parola"))
 		} else if r.FormValue("newPass") == "" {

@@ -8,7 +8,7 @@ import (
 )
 
 func updateDevicePage(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "PUT" {
+	if r.Method == "PUT" || r.Method == "POST" {
 		if r.FormValue("name") == "" {
 			writeResponse(w, requiredInputError("İsim"))
 		} else if r.FormValue("variance") == "" {

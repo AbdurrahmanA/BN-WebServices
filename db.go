@@ -1,34 +1,32 @@
 package main
 
 import (
-	"log"
+	"sync"
 
 	"github.com/go-bongo/bongo"
 )
 
-var connection = conDb()
-
-//var routers = router()
+var connection *bongo.Connection
+var lock = &sync.Mutex{}
 
 func conDb() *bongo.Connection {
-	config := &bongo.Config{
-		ConnectionString: "localhost",
-		Database:         "BN",
-	}
-	connection, err := bongo.Connect(config)
-	if err != nil {
-		log.Fatal(err)
+	if connection == nil {
+		lock.Lock()
+		defer lock.Unlock()
+		if connection == nil {
+			config := &bongo.Config{
+				ConnectionString: "localhost",
+				Database:         "BN",
+			}
+			connection, err := bongo.Connect(config)
+			if err != nil {
+				connection = nil
+				return connection
+			}
+			return connection
+		}
+		return connection
 	}
 	return connection
-}
 
-/*
-func router() *http.ServeMux {
-	mux := http.NewServeMux()
-	return mux
 }
-func handler() http.Handler {
-	handler := cors.Default().Handler(router())
-	return handler
-}
-*/

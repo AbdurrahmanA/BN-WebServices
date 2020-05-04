@@ -25,7 +25,7 @@ func main() {
 	mux.HandleFunc("/addbeacon", addBeaconPage)
 	mux.HandleFunc("/changepassword", passwordChangePage)
 	mux.HandleFunc("/checklostdevice", checkLostDevicePage)
-	mux.HandleFunc("/cartpage", cartPage)
+	mux.HandleFunc("/cart", cartPage)
 
 	mux.Handle("/users-images/", http.StripPrefix("/users-images", http.FileServer(http.Dir("users-images"))))
 	mux.Handle("/beacons-images/", http.StripPrefix("/beacons-images", http.FileServer(http.Dir("beacons-images"))))

@@ -156,7 +156,7 @@ func registerEmailTemplate(urlToken string) string {
 			<tr>
 				<td align="left" bgcolor="#ffffff" style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
 				<p style="margin: 0;">Bu işe yaramazsa, aşağıdaki bağlantıyı kopyalayıp tarayıcınıza yapıştırın:</p>
-				<p style="margin: 0;"><a  href="https://benimkinerede.com" target="_blank">` + urlToken + `</a></p>
+				<p style="margin: 0;"><a  href="" target="_blank">` + urlToken + `</a></p>
 				</td>
 			</tr>
 			</table>

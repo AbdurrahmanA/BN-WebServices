@@ -73,7 +73,7 @@ type StockViewArray struct {
 	StockViews []*StockView `json:"stocks" `
 }
 
-//Orders Sipariş bilgileri için gerekli yapı
+//Orders Sipariş bilgileri için gerekli veritabanı yapısı
 type Orders struct {
 	bongo.DocumentBase `bson:",inline"`
 	OrderStatus        int     `bson:"order_status" json:"order_status" `
@@ -86,6 +86,27 @@ type Orders struct {
 		UserAddress string `bson:"user_address" json:"user_address"`
 		UserPhone   string `bson:"user_phone" json:"user_phone"`
 	} `bson:"contact_info" json:"contact_info"`
+}
+
+//OrdersInWeb Sipariş bilgileri için gerekli  yapısı
+type OrdersInWeb struct {
+	OrderStatus int               ` json:"order_status" `
+	InOrder     []OrderArrayInWeb ` json:"orders" `
+	PaymentType string            ` json:"payment_type" `
+	TotalPrice  int               ` json:"total_price" `
+	ContactInfo struct {
+		UserID      string ` json:"user_id" `
+		UserSurname string ` json:"user_surname"`
+		UserAddress string ` json:"user_address"`
+		UserPhone   string ` json:"user_phone"`
+	} ` json:"contact_info"`
+}
+
+//OrderArrayInWeb web den gelen ürünlerin düzenlenmesi için gerekli yapı
+type OrderArrayInWeb struct {
+	ProductID    string  ` json:"product_id" `
+	ProductName  string  ` json:"product_name" `
+	ProductPrice float32 ` json:"product_price" `
 }
 
 //Order Toplam ürünler için gerekli yapı

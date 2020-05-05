@@ -29,6 +29,8 @@ func passwordChangePage(w http.ResponseWriter, r *http.Request) {
 					writeResponse(w, objectIDError())
 				} else if control == "OldPass" {
 					writeResponse(w, incorrectInput("Eski şifre"))
+				} else if control == "OldPassAgain" {
+					writeResponse(w, incorrectInput("Eski şifre tekrarı"))
 				} else if control == "PassMatch" {
 					writeResponse(w, incorrectInput("Yeni şifrelerin uyumu"))
 				} else if control == "Save" {
@@ -56,6 +58,9 @@ func passwordChange(oldPass string, newPass string, newPassAgain string, id stri
 		}
 		if newPass != newPassAgain {
 			return false, "PassMatch"
+		}
+		if person.UserInfos.UserPassword == newPass {
+			return false, "OldPassAgain"
 		}
 		person.UserInfos.UserPassword = newPass
 		errors := connection.Collection("users").Save(person)

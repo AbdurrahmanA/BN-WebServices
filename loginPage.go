@@ -16,11 +16,14 @@ func loginPage(w http.ResponseWriter, r *http.Request) {
 		} else if r.FormValue("loginType") == "" {
 			writeResponse(w, requiredInputError("loginType"))
 		} else {
-			var user, control = findUser(r.FormValue("email"), r.FormValue("password"), r.FormValue("loginType"))
+			var user, control = findUser(r.FormValue("email"), r.FormValue("password"), r.FormValue("loginType"), r.FormValue("pushId"))
 			if control == "Login" {
 				writeResponse(w, string(user))
 			} else if control == "Notfound" {
 				writeResponse(w, notFindRecordError())
+
+			} else if control == "PushID" {
+				writeResponse(w, requiredInputError("PushID"))
 
 			} else if control == "Lvl" {
 				writeResponse(w, invalidLoginRequest())
@@ -39,7 +42,7 @@ func loginPage(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func findUser(userMail string, userPassword string, loginType string) ([]byte, string) {
+func findUser(userMail string, userPassword string, loginType string, pushID string) ([]byte, string) {
 	person := &Person{}
 	var data []byte
 	controlMail := checkEmailValidity(userMail)
@@ -65,8 +68,11 @@ func findUser(userMail string, userPassword string, loginType string) ([]byte, s
 		}
 		return addError(data), "Login"
 	} else if loginType == "mobil" {
-
+		if pushID == "" {
+			return data, "PushID"
+		}
 		person.UserInfos.UserMobilToken = tokenGenerator()
+		person.PushInfos.PushID = pushID
 		connection.Collection("users").Save(person)
 		user := &Userjon{person.UserInfos.UserMobilToken}
 		data, err = json.Marshal(user)

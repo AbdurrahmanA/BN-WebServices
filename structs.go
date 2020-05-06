@@ -11,19 +11,22 @@ import (
 type Person struct {
 	bongo.DocumentBase `bson:",inline"`
 	Contacts           struct {
-		UserRealName string `bson:"user_real_name" json:"user_real_name"`
-		UserSurname  string `bson:"user_surname" json:"user_surname"`
-		UserAddress  string `bson:"user_address" json:"user_address"`
-		UserPhone    string `bson:"user_phone" json:"user_phone"`
-	} `bson:"contact_infos"  `
+		UserRealName string `bson:"user_real_name"`
+		UserSurname  string `bson:"user_surname"`
+		UserAddress  string `bson:"user_address"`
+		UserPhone    string `bson:"user_phone"`
+	} `bson:"contact_infos"`
 	UserInfos struct {
-		UserPassword   string `bson:"user_password" json:"user_password"`
-		UserMail       string `bson:"user_mail" json:"user_mail"`
-		UserWebToken   string `bson:"user_web_token" json:"user_web_token"`
-		UserMobilToken string `bson:"user_mobile_token" json:"user_mobile_token"`
-		RoleLvl        int    `bson:"role_lvl" json:"role_lvl"`
-		Image          string `bson:"img" json:"img"`
-	} `bson:"user_infos"  `
+		UserPassword   string `bson:"user_password"`
+		UserMail       string `bson:"user_mail"`
+		UserWebToken   string `bson:"user_web_token"`
+		UserMobilToken string `bson:"user_mobile_token"`
+		RoleLvl        int    `bson:"role_lvl"`
+		Image          string `bson:"img" `
+	} `bson:"user_infos"`
+	PushInfos struct {
+		PushID string `bson:"push_id"`
+	} `bson:"push_infos"`
 }
 
 //Userjon  Giriş işlemi için gerekli dönüşleri oluşturmamızı sağlayan yapı
@@ -85,6 +88,7 @@ type Orders struct {
 		UserSurname string `bson:"user_surname" json:"user_surname"`
 		UserAddress string `bson:"user_address" json:"user_address"`
 		UserPhone   string `bson:"user_phone" json:"user_phone"`
+		UserMail    string `bson:"user_mail" json:"user_mail"`
 	} `bson:"contact_info" json:"contact_info"`
 }
 
@@ -99,6 +103,7 @@ type OrdersInWeb struct {
 		UserSurname string ` json:"user_surname"`
 		UserAddress string ` json:"user_address"`
 		UserPhone   string ` json:"user_phone"`
+		UserMail    string ` json:"user_mail"`
 	} ` json:"contact_info"`
 }
 
@@ -107,13 +112,15 @@ type OrderArrayInWeb struct {
 	ProductID    string  ` json:"product_id" `
 	ProductName  string  ` json:"product_name" `
 	ProductPrice float32 ` json:"product_price" `
+	Quantity     int     ` json:"quantity" `
 }
 
 //Order Toplam ürünler için gerekli yapı
 type Order struct {
-	ProductID    bson.ObjectId `bson:"product_id" json:"product_id" `
-	ProductName  string        `bson:"product_name" json:"product_name" `
-	ProductPrice float32       `bson:"product_price" json:"product_price" `
+	ProductID    bson.ObjectId `bson:"product_id" `
+	ProductName  string        `bson:"product_name" `
+	ProductPrice float32       `bson:"product_price" `
+	Quantity     int           `bson:"product_price" `
 }
 
 //Log Yapılan işlemlerin takipi için gerekli yapı

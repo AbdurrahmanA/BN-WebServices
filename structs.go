@@ -250,3 +250,41 @@ type FindLostBeacon struct {
 	UserMail   string        `json:"user_mail"`
 	LostStatus bool          `json:"lost_status"`
 }
+
+//NotificationForAll bildirimlerin yapısı
+type NotificationForAll struct {
+	bongo.DocumentBase `bson:",inline"`
+	Title              string `bson:"title"`
+	Description        string `bson:"description"`
+	ImportanceType     int    `bson:"importance_type"`
+}
+
+//NotificationForGroups bildirimlerin yapısı
+type NotificationForGroups struct {
+	bongo.DocumentBase `bson:",inline"`
+	Title              string `bson:"title"`
+	GroupTypes         int    `bson:"group_types" `
+	Description        string `bson:"description"`
+	ImportanceType     int    `bson:"importance_type"`
+}
+
+//NotificationForUser bildirimlerin yapısı
+type NotificationForUser struct {
+	bongo.DocumentBase `bson:",inline"`
+	Title              string        `bson:"title"`
+	UserID             bson.ObjectId `bson:"user_id"`
+	Description        string        `bson:"description"`
+	ImportanceType     int           `bson:"importance_type"`
+}
+
+//MyNotifications bildirimlerin yapısı
+type MyNotifications struct {
+	Title       string    `json:"title"`
+	Description string    `json:"description"`
+	Date        time.Time `json:"date"`
+}
+
+//MyNotificationsArr bildirimlerin yapısı
+type MyNotificationsArr struct {
+	Notifications []*MyNotifications `json:"notifications"`
+}

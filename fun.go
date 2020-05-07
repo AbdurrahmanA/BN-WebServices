@@ -44,6 +44,19 @@ func checkBeaconType(beaconType int) string {
 	}
 	return ""
 }
+
+func checkImportanceType(notificationType int) string {
+	if notificationType == 0 {
+		return "Uyarı"
+	}
+	if notificationType == 1 {
+		return "Güncelleme"
+	}
+	if notificationType == 2 {
+		return "Kampanya"
+	}
+	return ""
+}
 func checkObjID(id string) (string, bool) {
 	var s = bson.IsObjectIdHex(id)
 	if s == true {
@@ -98,7 +111,6 @@ func sendRegisterMail(token string, email string) bool {
 	subject := "Email Onay"
 	to := mail.NewEmail(email, email)
 	plainTextContent := "text/html"
-	//htmlContent := "<strong>"  "</strong>"
 	message := mail.NewSingleEmail(from, subject, to, plainTextContent, temp)
 	client := sendgrid.NewSendClient(os.Getenv("SENDGRID_API_KEY"))
 	response, err := client.Send(message)
@@ -115,6 +127,33 @@ func sendRegisterMail(token string, email string) bool {
 	}
 	return true
 }
+func sendLostPasswordMail(token string, email string) bool {
+	url := "http://213.14.182.224:8090/lostpasswordcontrol?token="
+
+	temp := lostPasswordEmailTemplate(url + token)
+
+	fromEmail := "abdurrahman262@hotmail.com"
+	from := mail.NewEmail("BenimkiNerede", fromEmail)
+	subject := "Şifre Yenileme"
+	to := mail.NewEmail(email, email)
+	plainTextContent := "text/html"
+	message := mail.NewSingleEmail(from, subject, to, plainTextContent, temp)
+	client := sendgrid.NewSendClient(os.Getenv("SENDGRID_API_KEY"))
+	response, err := client.Send(message)
+
+	if err != nil {
+		fmt.Println(response.StatusCode)
+		return false
+	}
+	if response.StatusCode != 202 {
+		fmt.Println(response.StatusCode)
+		fmt.Println(response.Body)
+		fmt.Println(response.Headers)
+		return false
+	}
+	return true
+}
+
 func fileExists(path string) (bool, error) {
 	_, err := os.Stat(path)
 	if err == nil {

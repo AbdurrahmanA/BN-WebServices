@@ -1,0 +1,123 @@
+package main
+
+import (
+	"net/http"
+	"strconv"
+	"strings"
+
+	"github.com/globalsign/mgo/bson"
+)
+
+func notificationsPage(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "POST" {
+		if r.FormValue("msg") == "" {
+			writeResponse(w, requiredInputError("msg"))
+		} else if r.FormValue("id") == "" {
+			writeResponse(w, requiredInputError("id"))
+		} else if r.FormValue("type") == "" {
+			writeResponse(w, requiredInputError("type"))
+		} else if r.FormValue("title") == "" {
+			writeResponse(w, requiredInputError("title"))
+		} else if r.FormValue("importanceType") == "" {
+			writeResponse(w, requiredInputError("importanceType"))
+		} else {
+			var control, str = notificationsPageControl(r.FormValue("msg"), r.FormValue("id"), r.FormValue("type"), r.FormValue("title"), r.FormValue("importanceType"))
+			if control == false {
+				if str == "Noti" {
+					writeResponse(w, sendNotificationError())
+				} else if str == "Convert" {
+					writeResponse(w, incorrectInput("Convert"))
+				} else if str == "For" {
+					writeResponse(w, incorrectInput("append"))
+				} else {
+					writeResponse(w, someThingWentWrong())
+				}
+			} else {
+				writeResponse(w, succesfullyNotificationError())
+			}
+		}
+	} else {
+		writeResponse(w, notValidRequestError(r.Method))
+	}
+}
+func notificationsPageControl(msg string, id string, title string, beaconType string, importanceType string) (bool, string) {
+	notificationForUsers := NotificationsForUserID{}
+	var control bool
+	importanceTypeInt, err := strconv.Atoi(importanceType)
+	if err != nil {
+		return false, "Convert"
+	}
+	if importanceTypeInt >= 3 || importanceTypeInt <= -1 {
+		return false, "Type"
+	}
+	beaconTypeInt, err := strconv.Atoi(beaconType)
+	if err != nil {
+		return false, "Convert"
+	}
+	if beaconTypeInt > 4 || beaconTypeInt < 0 {
+		return false, "beaconTypeInt"
+	}
+	ids := strings.Split(id, ",")
+
+	if ids[0] == "All" {
+		controlAll, strAll := notificationsAll(msg, title, importanceTypeInt)
+		return controlAll, strAll
+	}
+	if beaconType != "null" {
+		controlGroup, strGroup := notificationsGroup(msg, title, beaconTypeInt, importanceTypeInt)
+		return controlGroup, strGroup
+	}
+	control = notificationForUsers.pushNotificationPlayerID(ids, msg, title)
+	return control, "Noti"
+}
+
+func notificationsAll(msg string, title string, importanceTypeInt int) (bool, string) {
+	notificationForAll := NotificationsForAllUsers{}
+
+	control := notificationForAll.pushNotificationAllUsers(msg, title)
+	if control != false {
+		notiForAll := &NotificationForAll{}
+		notiForAll.Description = msg
+		notiForAll.Title = title
+		notiForAll.ImportanceType = importanceTypeInt
+		errs := connection.Collection("notifications").Save(notiForAll)
+		if errs != nil {
+			return false, "Save"
+		}
+	}
+
+	return control, "Noti"
+}
+func notificationsGroup(msg string, title string, beaconTypeInt int, importanceTypeInt int) (bool, string) {
+	person := &Person{}
+	beacon := &Beacon{}
+	notificationForUsers := NotificationsForUserID{}
+	var userIds []string
+	pushIds := connection.Collection("beacons").Find(bson.M{"beacon_infos.type": beaconTypeInt})
+	for pushIds.Next(beacon) {
+		s, _ := bson.ObjectId.MarshalJSON(beacon.UserInfos.UserID)
+		t := strings.ReplaceAll(string(s), `"`, "")
+		userIds = append(userIds, t)
+	}
+	var pushNotIds []string
+	for i := 0; i < len(userIds); i++ {
+		err := connection.Collection("users").FindById(bson.ObjectIdHex(userIds[i]), person)
+		if err != nil {
+			return false, "For"
+		}
+		pushNotIds = append(pushNotIds, person.PushInfos.PushID)
+	}
+	control := notificationForUsers.pushNotificationPlayerID(pushNotIds, msg, title)
+	if control != false {
+		notiForGroup := &NotificationForGroups{}
+		notiForGroup.Description = msg
+		notiForGroup.Title = title
+		notiForGroup.ImportanceType = importanceTypeInt
+		notiForGroup.GroupTypes = beaconTypeInt
+		errs := connection.Collection("notifications").Save(notiForGroup)
+		if errs != nil {
+			return false, "Save"
+		}
+	}
+	return control, "Noti"
+}

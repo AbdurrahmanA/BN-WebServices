@@ -8,6 +8,7 @@ import (
 
 func main() {
 	connection = conDb()
+
 	mux := http.NewServeMux()
 	mux.HandleFunc("/login", loginPage)
 	mux.HandleFunc("/updateprofile", updateProfilePage)
@@ -26,6 +27,13 @@ func main() {
 	mux.HandleFunc("/changepassword", passwordChangePage)
 	mux.HandleFunc("/checklostdevice", checkLostDevicePage)
 	mux.HandleFunc("/cart", cartPage)
+	mux.HandleFunc("/notification", notificationsPage)
+	mux.HandleFunc("/mynotification", myNotificationsListPage)
+	mux.HandleFunc("/lostpassword", lostPasswordPage)
+	mux.HandleFunc("/lostpasswordvalidation", validationLostPasswordPage)
+	mux.HandleFunc("/lostpasswordchange", LostPasswordChangePage)
+	mux.HandleFunc("/contactmail", contactPage)
+	mux.HandleFunc("/deleteitem", deleteItemPage)
 
 	mux.Handle("/users-images/", http.StripPrefix("/users-images", http.FileServer(http.Dir("users-images"))))
 	mux.Handle("/beacons-images/", http.StripPrefix("/beacons-images", http.FileServer(http.Dir("beacons-images"))))

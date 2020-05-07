@@ -12,6 +12,12 @@ func requiredInputError(inputName string) string {
 func succesfullyRecordedError() string {
 	return `{"error": "false","message":"Başarılı şekilde kaydedilmiştir."}`
 }
+func succesfullyError() string {
+	return `{"error": "false","message":"Başarılı ."}`
+}
+func succesfullyNotificationError() string {
+	return `{"error": "false","message":"Bildirim gönderimi başarılı."}`
+}
 func failedRecordError() string {
 	return `{"error": "true","message":"Kayıt başarısız olmuştur."}`
 }
@@ -35,6 +41,9 @@ func someThingWentWrong() string {
 }
 func sendMailError() string {
 	return `{"error": "true","message":"Mail gönderimi başarısız."}`
+}
+func sendNotificationError() string {
+	return `{"error": "true","message":"Bildirim gönderimi başarısız."}`
 }
 func invalidLoginRequest() string {
 	return `{"error": "true","message":"Onaylanmamış kullanıcı"}`

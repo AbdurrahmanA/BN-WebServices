@@ -30,16 +30,16 @@ func checkPhone(newValues string) bool {
 	return true
 }
 func checkBeaconType(beaconType int) string {
-	if beaconType == 1 {
+	if beaconType == 0 {
 		return "Tasma"
 	}
-	if beaconType == 2 {
+	if beaconType == 1 {
 		return "Bileklik"
 	}
-	if beaconType == 3 {
+	if beaconType == 2 {
 		return "Anahtarlık"
 	}
-	if beaconType == 4 {
+	if beaconType == 3 {
 		return "Kalemlik"
 	}
 	return ""

@@ -47,7 +47,7 @@ func notificationsPageControl(msg string, id string, title string, beaconType st
 	if err != nil {
 		return false, "Convert"
 	}
-	if importanceTypeInt >= 3 || importanceTypeInt <= -1 {
+	if importanceTypeInt > 3 || importanceTypeInt < 0 {
 		return false, "Type"
 	}
 	beaconTypeInt, err := strconv.Atoi(beaconType)

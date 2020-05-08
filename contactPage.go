@@ -10,7 +10,7 @@ import (
 )
 
 func contactPage(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "GET" {
+	if r.Method == "POST" {
 		if r.FormValue("email") == "" {
 			writeResponse(w, requiredInputError("Mail"))
 		} else if r.FormValue("msg") == "" {
@@ -35,16 +35,16 @@ func contactPage(w http.ResponseWriter, r *http.Request) {
 }
 
 func sendContactMail(email string, msg string, title string, name string, surname string) bool {
+	control := checkEmailValidity(email)
+	if control == false {
+		return false
+	}
+	temp := " Kimden:" + name + " " + surname + " \n Email: " + email + " \n Konu: " + title + "\n Mesaj: " + msg
 
-	temp := `Kimden: ` + name + " " + surname + `  
-	Email: ` + email + ` 
-	Konu: ` + title + ` 
-	Mesaj: ` + msg
-
-	fromEmail := "abdurrahman262@hotmail.com"
+	fromEmail := "benimneredeki@gmail.com"
 	from := mail.NewEmail("BenimkiNerede", fromEmail)
-	subject := "Şifre Yenileme"
-	to := mail.NewEmail(fromEmail, fromEmail)
+	subject := "İletişim"
+	to := mail.NewEmail("benimneredeki@outlook.com", "benimneredeki@outlook.com")
 	plainTextContent := "text/html"
 	message := mail.NewSingleEmail(from, subject, to, plainTextContent, temp)
 	client := sendgrid.NewSendClient(os.Getenv("SENDGRID_API_KEY"))

@@ -29,6 +29,10 @@ func notificationsPage(w http.ResponseWriter, r *http.Request) {
 					writeResponse(w, incorrectInput("Convert"))
 				} else if str == "For" {
 					writeResponse(w, incorrectInput("append"))
+				} else if str == "Type" {
+					writeResponse(w, incorrectInput("importanceType"))
+				} else if str == "beaconTypeInt" {
+					writeResponse(w, incorrectInput("beaconTypeInt"))
 				} else {
 					writeResponse(w, someThingWentWrong())
 				}
@@ -41,7 +45,7 @@ func notificationsPage(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func notificationsPageControl(msg string, id string, title string, beaconType string, importanceType string) (bool, string) {
-	notificationForUsers := NotificationsForUserID{}
+	notificationForUser := NotificationsForUserID{}
 	var control bool
 	importanceTypeInt, err := strconv.Atoi(importanceType)
 	if err != nil {
@@ -67,7 +71,7 @@ func notificationsPageControl(msg string, id string, title string, beaconType st
 		controlGroup, strGroup := notificationsGroup(msg, title, beaconTypeInt, importanceTypeInt)
 		return controlGroup, strGroup
 	}
-	control = notificationForUsers.pushNotificationPlayerID(ids, msg, title)
+	control = notificationForUser.pushNotificationPlayerID(ids, msg, title)
 	return control, "Noti"
 }
 

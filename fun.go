@@ -106,7 +106,7 @@ func sendRegisterMail(token string, email string) bool {
 
 	temp := registerEmailTemplate(url + token)
 
-	fromEmail := "abdurrahman262@hotmail.com"
+	fromEmail := "benimneredeki@gmail.com"
 	from := mail.NewEmail("BenimkiNerede", fromEmail)
 	subject := "Email Onay"
 	to := mail.NewEmail(email, email)
@@ -132,7 +132,7 @@ func sendLostPasswordMail(token string, email string) bool {
 
 	temp := lostPasswordEmailTemplate(url + token)
 
-	fromEmail := "abdurrahman262@hotmail.com"
+	fromEmail := "benimneredeki@gmail.com"
 	from := mail.NewEmail("BenimkiNerede", fromEmail)
 	subject := "Şifre Yenileme"
 	to := mail.NewEmail(email, email)

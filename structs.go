@@ -66,9 +66,11 @@ type Beacon struct {
 
 //StockView beacon verileri stock ekranın için hazırlanması
 type StockView struct {
-	UUID  string ` json:"uuid"`
-	Major int    ` json:"major"`
-	Minor int    ` json:"minor"`
+	UUID  string        ` json:"uuid"`
+	Major int           ` json:"major"`
+	Minor int           ` json:"minor"`
+	Type  string        ` json:"type"`
+	ID    bson.ObjectId ` json:"id"`
 }
 
 //StockViewArray beacon verileri stock ekranında vermemizi saglar
@@ -287,4 +289,17 @@ type MyNotifications struct {
 //MyNotificationsArr bildirimlerin yapısı
 type MyNotificationsArr struct {
 	Notifications []*MyNotifications `json:"notifications"`
+}
+
+//NotificationsIDList bildirimlerin yapısı
+type NotificationsIDList struct {
+	ID      string        `json:"push_id"`
+	ObjID   bson.ObjectId `json:"user_id"`
+	Name    string        `json:"name"`
+	Surname string        `json:"surname"`
+}
+
+//NotificationsIDListArr bildirimlerin yapısı
+type NotificationsIDListArr struct {
+	Users []*NotificationsIDList `json:"users"`
 }

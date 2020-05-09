@@ -21,6 +21,8 @@ func deleteItemPage(w http.ResponseWriter, r *http.Request) {
 					writeResponse(w, notFindRecordError())
 				} else if str == "ID" {
 					writeResponse(w, objectIDError())
+				} else if str == "Type" {
+					writeResponse(w, incorrectInput("Type"))
 				} else {
 					writeResponse(w, someThingWentWrong())
 				}
@@ -40,12 +42,14 @@ func deleteItem(id string, ıtemType string) (bool, string) {
 				return false, "NotFound"
 			}
 			return true, ""
+		} else if ıtemType == "beacon" {
+			err := connection.Collection("beacons").DeleteOne(bson.M{"_id": bson.ObjectIdHex(conroltID)})
+			if err != nil {
+				return false, "NotFound"
+			}
+			return true, ""
 		}
-		err := connection.Collection("beacons").DeleteOne(bson.M{"_id": bson.ObjectIdHex(conroltID)})
-		if err != nil {
-			return false, "NotFound"
-		}
-		return true, ""
+		return false, "Type"
 	}
 	return false, "ID"
 }

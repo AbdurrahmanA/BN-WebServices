@@ -29,6 +29,7 @@ func main() {
 	mux.HandleFunc("/cart", cartPage)
 	mux.HandleFunc("/notifications", notificationsPage)
 	mux.HandleFunc("/mynotifications", myNotificationsListPage)
+	mux.HandleFunc("/notificationidlist", notificationIDListPage)
 	mux.HandleFunc("/lostpassword", lostPasswordPage)
 	mux.HandleFunc("/lostpasswordvalidation", validationLostPasswordPage)
 	mux.HandleFunc("/lostpasswordchange", LostPasswordChangePage)

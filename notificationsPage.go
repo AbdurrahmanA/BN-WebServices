@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -52,8 +51,8 @@ func notificationsPage(w http.ResponseWriter, r *http.Request) {
 func notificationsPageControl(msg string, id string, title string, beaconType string, importanceType string, userID string) (bool, string) {
 	notificationForUser := NotificationsForUserID{}
 	var control bool
-	var controlID string
 	var errs bool
+	controlID := ""
 	if userID != "" {
 		controlID, errs = checkObjID(userID)
 		if errs == false {
@@ -84,19 +83,19 @@ func notificationsPageControl(msg string, id string, title string, beaconType st
 		controlGroup, strGroup := notificationsGroup(msg, title, beaconTypeInt, importanceTypeInt)
 		return controlGroup, strGroup
 	}
-	fmt.Println("3")
-	control = notificationForUser.pushNotificationPlayerID(ids, msg, title)
-	if control != false {
-
-		controlIDBson := bson.ObjectIdHex(controlID)
-		notiForUser := &NotificationForUser{}
-		notiForUser.Description = msg
-		notiForUser.Title = title
-		notiForUser.UserID = controlIDBson
-		notiForUser.ImportanceType = importanceTypeInt
-		errs := connection.Collection("notifications").Save(notiForUser)
-		if errs != nil {
-			return false, "Save"
+	if controlID != "" {
+		control = notificationForUser.pushNotificationPlayerID(ids, msg, title)
+		if control != false {
+			controlIDBson := bson.ObjectIdHex(controlID)
+			notiForUser := &NotificationForUser{}
+			notiForUser.Description = msg
+			notiForUser.Title = title
+			notiForUser.UserID = controlIDBson
+			notiForUser.ImportanceType = importanceTypeInt
+			errs := connection.Collection("notifications").Save(notiForUser)
+			if errs != nil {
+				return false, "Save"
+			}
 		}
 	}
 	return control, "Noti"

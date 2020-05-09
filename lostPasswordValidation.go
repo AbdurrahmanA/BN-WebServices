@@ -15,7 +15,7 @@ func validationLostPasswordPage(w http.ResponseWriter, r *http.Request) {
 		} else {
 			var lostPass, control = validationLostPassword(r.FormValue("token"), r.FormValue("email"))
 			if lostPass == true {
-				writeResponse(w, succesfullyRecordedError())
+				writeResponse(w, succesfullyError())
 			} else {
 				if control == "NotFound" {
 					writeResponse(w, notFindRecordError())

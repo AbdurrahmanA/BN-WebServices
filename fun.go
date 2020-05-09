@@ -129,8 +129,8 @@ func sendRegisterMail(token string, email string) bool {
 }
 func sendLostPasswordMail(token string, email string) bool {
 	url := "http://213.14.182.224:8090/lostpasswordcontrol?token="
-
-	temp := lostPasswordEmailTemplate(url + token)
+	dv := "?email=" + email
+	temp := lostPasswordEmailTemplate(url + token + dv)
 
 	fromEmail := "benimneredeki@gmail.com"
 	from := mail.NewEmail("BenimkiNerede", fromEmail)

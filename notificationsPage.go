@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -51,6 +52,14 @@ func notificationsPage(w http.ResponseWriter, r *http.Request) {
 func notificationsPageControl(msg string, id string, title string, beaconType string, importanceType string, userID string) (bool, string) {
 	notificationForUser := NotificationsForUserID{}
 	var control bool
+	var controlID string
+	var errs bool
+	if userID != "" {
+		controlID, errs = checkObjID(userID)
+		if errs == false {
+			return false, "ID"
+		}
+	}
 	importanceTypeInt, err := strconv.Atoi(importanceType)
 	if err != nil {
 		return false, "Convert"
@@ -71,16 +80,14 @@ func notificationsPageControl(msg string, id string, title string, beaconType st
 		controlAll, strAll := notificationsAll(msg, title, importanceTypeInt)
 		return controlAll, strAll
 	}
-	if beaconType != "null" {
+	if beaconType != "null" && beaconTypeInt != 6 {
 		controlGroup, strGroup := notificationsGroup(msg, title, beaconTypeInt, importanceTypeInt)
 		return controlGroup, strGroup
 	}
+	fmt.Println("3")
 	control = notificationForUser.pushNotificationPlayerID(ids, msg, title)
 	if control != false {
-		controlID, err := checkObjID(userID)
-		if err == false {
-			return false, "ID"
-		}
+
 		controlIDBson := bson.ObjectIdHex(controlID)
 		notiForUser := &NotificationForUser{}
 		notiForUser.Description = msg

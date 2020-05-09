@@ -31,7 +31,7 @@ func main() {
 	mux.HandleFunc("/mynotifications", myNotificationsListPage)
 	mux.HandleFunc("/notificationidlist", notificationIDListPage)
 	mux.HandleFunc("/lostpassword", lostPasswordPage)
-	mux.HandleFunc("/lostpasswordvalidation", validationLostPasswordPage)
+	mux.HandleFunc("/lostpasswordcontrol", validationLostPasswordPage)
 	mux.HandleFunc("/lostpasswordchange", LostPasswordChangePage)
 	mux.HandleFunc("/contactmail", contactPage)
 	mux.HandleFunc("/deleteitem", deleteItemPage)

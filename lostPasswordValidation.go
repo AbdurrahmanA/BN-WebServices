@@ -31,12 +31,11 @@ func validationLostPasswordPage(w http.ResponseWriter, r *http.Request) {
 
 func validationLostPassword(token string, email string) (bool, string) {
 	person := &Person{}
-	err := connection.Collection("users").FindOne(bson.M{"user_infos.user_web_token": token}, person)
+	err := connection.Collection("users").FindOne(bson.M{"user_infos.user_web_token": token, "user_infos.user_mail": email}, person)
 	if err != nil {
 		return false, "NotFound"
 	}
 	return true, ""
-
 }
 
 // LostPasswordChangePage ss

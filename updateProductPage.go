@@ -71,7 +71,6 @@ func updateProduct(token string, proDes string, proName string, proPrice string,
 			if proTypeInt > 4 || proTypeInt < 0 {
 				return false, "Ürüntipi"
 			}
-
 			product.ProductDescription = proDes
 			product.ProductName = proName
 			product.ProductType = proTypeInt

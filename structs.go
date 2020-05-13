@@ -81,18 +81,18 @@ type StockViewArray struct {
 //Orders Sipariş bilgileri için gerekli veritabanı yapısı
 type Orders struct {
 	bongo.DocumentBase `bson:",inline"`
-	OrderStatus        int                 `bson:"order_status" json:"order_status" `
-	InOrder            []OrderArrayInMongo `bson:"orders" json:"orders" `
-	PaymentType        string              `bson:"payment_type" json:"payment_type" `
-	TotalPrice         int                 `bson:"total_price" json:"total_price" `
+	OrderStatus        int                 `bson:"order_status"  `
+	InOrder            []OrderArrayInMongo `bson:"orders" `
+	PaymentType        string              `bson:"payment_type"  `
+	TotalPrice         int                 `bson:"total_price"  `
 	ContactInfo        struct {
-		UserID       bson.ObjectId `bson:"user_id" json:"user_id" `
-		UserSurname  string        `bson:"user_surname" json:"user_surname"`
-		UserRealName string        `bson:"user_real_name" json:"user_real_name"`
-		UserAddress  string        `bson:"user_address" json:"user_address"`
-		UserPhone    string        `bson:"user_phone" json:"user_phone"`
-		UserMail     string        `bson:"user_mail" json:"user_mail"`
-	} `bson:"contact_info" json:"contact_info"`
+		UserID       bson.ObjectId `bson:"user_id"  `
+		UserSurname  string        `bson:"user_surname" `
+		UserRealName string        `bson:"user_real_name" `
+		UserAddress  string        `bson:"user_address" `
+		UserPhone    string        `bson:"user_phone" `
+		UserMail     string        `bson:"user_mail" `
+	} `bson:"contact_info" `
 }
 
 //OrdersInWeb Sipariş bilgileri için gerekli  yapısı
@@ -102,12 +102,11 @@ type OrdersInWeb struct {
 	PaymentType string            ` json:"payment_type" `
 	TotalPrice  int               ` json:"total_price" `
 	ContactInfo struct {
-		UserID       bson.ObjectId ` json:"user_id" `
-		UserSurname  string        ` json:"user_surname"`
-		UserRealName string        ` json:"user_real_name"`
-		UserAddress  string        ` json:"user_address"`
-		UserPhone    string        ` json:"user_phone"`
-		UserMail     string        ` json:"user_mail"`
+		UserSurname  string ` json:"user_surname"`
+		UserRealName string ` json:"user_real_name"`
+		UserAddress  string ` json:"user_address"`
+		UserPhone    string ` json:"user_phone"`
+		UserMail     string ` json:"user_mail"`
 	} ` json:"contact_info"`
 }
 

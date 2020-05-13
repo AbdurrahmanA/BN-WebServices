@@ -38,6 +38,8 @@ func updateBeaconPage(w http.ResponseWriter, r *http.Request) {
 					writeResponse(w, incorrectInput("Type"))
 				} else if str == "Save" {
 					writeResponse(w, dataBaseSaveError())
+				} else if str == "ID" {
+					writeResponse(w, incorrectInput("ID"))
 				} else {
 					writeResponse(w, someThingWentWrong())
 				}

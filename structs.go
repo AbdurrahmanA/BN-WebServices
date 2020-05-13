@@ -167,11 +167,10 @@ type LostBeacon struct {
 //Products Ürün verileri için gerekli yapı
 type Products struct {
 	bongo.DocumentBase `bson:",inline"`
-	ProductID          bson.ObjectId ` json:"product_id" `
-	ProductDescription string        `bson:"product_description" json:"product_description" `
-	ProductName        string        `bson:"product_name" json:"product_name" `
-	ProductPrice       float32       `bson:"product_price" json:"product_price" `
-	ProductType        int           `bson:"type" json:"type" `
+	ProductDescription string  `bson:"product_description" json:"product_description" `
+	ProductName        string  `bson:"product_name" json:"product_name" `
+	ProductPrice       float32 `bson:"product_price" json:"product_price" `
+	ProductType        int     `bson:"type" json:"type" `
 }
 
 //ProductsInApp Ürün verilerini gönderme için gerekli yapı

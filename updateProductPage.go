@@ -19,6 +19,8 @@ func updateProductPage(w http.ResponseWriter, r *http.Request) {
 			writeResponse(w, requiredInputError("Ürün fiyatı "))
 		} else if r.FormValue("proType") == "" {
 			writeResponse(w, requiredInputError("Ürün tipi "))
+		} else if r.FormValue("id") == "" {
+			writeResponse(w, requiredInputError("id"))
 		} else {
 			var control, str = updateProduct(r.FormValue("token"), r.FormValue("proDes"), r.FormValue("proName"), r.FormValue("proPrice"), r.FormValue("proType"), r.FormValue("id"))
 			if control == true {
@@ -30,12 +32,12 @@ func updateProductPage(w http.ResponseWriter, r *http.Request) {
 					writeResponse(w, incorrectInput("Ürün Fiyatı"))
 				} else if str == "Ürüntipi" {
 					writeResponse(w, incorrectInput("Ürün tipi"))
-				} else if str == "Token" {
-					writeResponse(w, invalidPermission())
 				} else if str == "Save" {
 					writeResponse(w, dataBaseSaveError())
 				} else if str == "NotFound" {
 					writeResponse(w, notFindRecordError())
+				} else if str == "ID" {
+					writeResponse(w, incorrectInput("ID"))
 				} else {
 					writeResponse(w, someThingWentWrong())
 				}
@@ -80,6 +82,7 @@ func updateProduct(token string, proDes string, proName string, proPrice string,
 			}
 			return true, ""
 		}
+		return false, "ID"
 	}
 	return false, "Perm"
 }

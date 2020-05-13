@@ -51,7 +51,6 @@ func stockView(token string) ([]byte, string) {
 	if l == nil {
 		return nil, "NotFound"
 	}
-
 	response := &StockViewArray{l}
 	data, _ = json.Marshal(response)
 	return addError(data), ""

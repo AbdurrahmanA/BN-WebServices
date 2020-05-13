@@ -2,6 +2,11 @@ package main
 
 import (
 	"net/http"
+	"strconv"
+	"strings"
+
+	creditcard "github.com/durango/go-credit-card"
+	"github.com/globalsign/mgo/bson"
 )
 
 func cartPage(w http.ResponseWriter, r *http.Request) {
@@ -18,15 +23,144 @@ func cartPage(w http.ResponseWriter, r *http.Request) {
 			writeResponse(w, requiredInputError("Adres "))
 		} else if r.FormValue("user_phone") == "" {
 			writeResponse(w, requiredInputError("Telefon "))
+		} else if r.FormValue("email") == "" {
+			writeResponse(w, requiredInputError("Telefon "))
+		} else if r.FormValue("creditCardNo") == "" {
+			writeResponse(w, requiredInputError("creditCardNo"))
+		} else if r.FormValue("creditCardFullName") == "" {
+			writeResponse(w, requiredInputError("creditCardFullName"))
+		} else if r.FormValue("creditCardExDate") == "" {
+			writeResponse(w, requiredInputError("creditCardExDate"))
+		} else if r.FormValue("cvv") == "" {
+			writeResponse(w, requiredInputError("cvv"))
+		} else if r.FormValue("totalprice") == "" {
+			writeResponse(w, requiredInputError("totalprice"))
 		} else {
-			writeResponse(w, succesfullyRecordedError())
+			var control, str = cartPageControl(r.FormValue("orders"), r.FormValue("user_real_name"), r.FormValue("user_id"), r.FormValue("user_surname"), r.FormValue("user_address"), r.FormValue("user_phone"), r.FormValue("email"), r.FormValue("creditCardNo"), r.FormValue("creditCardFullName"), r.FormValue("creditCardExDate"), r.FormValue("cvv"), r.FormValue("totalprice"))
+			if str == true {
+				writeResponse(w, succesfullyRecordedError())
+			} else {
+				if control == "Card" {
+					writeResponse(w, creditCardError())
+				} else if control == "SaveBeacon" {
+					writeResponse(w, incorrectInput("SaveBeacon"))
+				} else if control == "Save" {
+					writeResponse(w, dataBaseSaveError())
+				} else if control == "Phone" {
+					writeResponse(w, incorrectInput("Phone"))
+				} else if control == "Mail" {
+					writeResponse(w, incorrectInput("Mail"))
+				} else if control == "ID" {
+					writeResponse(w, objectIDError())
+				} else if control == "totalPrice" {
+					writeResponse(w, incorrectInput("totalPrice"))
+				} else if control == "Append" {
+					writeResponse(w, incorrectInput("Append"))
+				} else {
+					writeResponse(w, someThingWentWrong())
+				}
+			}
 		}
 	} else {
 		writeResponse(w, notValidRequestError(r.Method))
 	}
 }
+func cartPageControl(order string, userRealName string, userID string, userSurname string, userAddress string, userPhone string, email string, creditCardNo string, creditCardFullName string, creditCardExDate string, cvv string, totalPrice string) (string, bool) {
+	creditCardNoLast := strings.Replace(creditCardNo, " ", "", -1)
+	creditCardExDateLast := strings.Replace(creditCardExDate, " ", "", -1)
 
-func cartPageControl(orders string) {
-	//{"order_status":"0","orders":[{"product_id":"5e4ef7b315a9c347b8810e66","product_name":"beaconCUK","product_price":"0.95"}],"payment_type":"CARDXXX","total_price":"3.1","contact_info":{"user_real_name":"xxxxxxxxxxxx","user_id":"5e4d83a99510103a245aec83","user_surname":"xxxxxxxxxxxxxxxxx","user_address":"xxxx 07 xxxx a CR007","user_phone":"+90533345646546"}}
+	fullDate := strings.Split(creditCardExDateLast, "/")
+	card := creditcard.Card{Number: creditCardNoLast, Cvv: cvv, Month: fullDate[0], Year: fullDate[1]}
+	err := card.Validate()
+	if err != nil {
+		return "Card", false
+	}
+	controlEmail := checkEmailValidity(email)
+	if controlEmail == false {
+		return "Email", false
+	}
+	controlPhone := checkPhoneNumber(userPhone)
+	if controlPhone == false {
+		return "Phone", false
+	}
+	conroltID, errID := checkObjID(userID)
+	if errID != true {
+		return "ID", false
+	}
+	totalPriceInt, err := strconv.Atoi(totalPrice)
+	if err != nil {
+		return "totalPrice", false
+	}
+	userObjID := bson.ObjectIdHex(conroltID)
 
+	orders := ordersArrayConvert(order)
+	ord := ordersStructFilling(orders)
+	beacon := &Beacon{}
+
+	for i := 0; i < len(ord); i++ {
+		for j := 0; j < 4; j++ {
+			if ord[i].ProductType == j {
+				var objIDArr []bson.ObjectId
+				quantity := ord[i].Quantity
+				results := connection.Collection("beacons").Find(bson.M{"beacon_infos.type": ord[i].ProductType})
+				count := 0
+				for results.Next(beacon) {
+					objIDArr = append(objIDArr, beacon.Id)
+					count++
+				}
+				if count >= quantity {
+					for t := 0; t < count; t++ {
+						device := &Beacon{}
+						err := connection.Collection("beacons").FindById(objIDArr[t], device)
+						if err != nil {
+							return "Append", false
+						}
+						device.UserInfos.UserID = userObjID
+						device.UserInfos.UserMail = email
+						device.UserInfos.UserPhone = userPhone
+						errors := connection.Collection("beacons").Save(device)
+						if errors != nil {
+							return "SaveBeacon", false
+						}
+					}
+				}
+
+			}
+		}
+
+	}
+	Order := &Orders{}
+	Order.InOrder = ord
+	Order.OrderStatus = 0
+	Order.PaymentType = "Cart"
+	Order.TotalPrice = totalPriceInt
+	Order.ContactInfo.UserPhone = userPhone
+	Order.ContactInfo.UserAddress = userAddress
+	Order.ContactInfo.UserID = userObjID
+	Order.ContactInfo.UserMail = email
+	Order.ContactInfo.UserSurname = userSurname
+	Order.ContactInfo.UserRealName = userRealName
+	return "", true
+
+}
+func ordersArrayConvert(orders string) []string {
+	fileSlice := strings.Split(orders, ",")
+	stringFiles := strings.Join(fileSlice, "|")
+	fileSlices := strings.Split(stringFiles, "|")
+	return fileSlices
+}
+func ordersStructFilling(orders []string) []OrderArrayInMongo {
+	var ordersStruct []OrderArrayInMongo
+	var order OrderArrayInMongo
+	count := 0
+	for i := 0; i < len(orders)/6; i++ {
+		id := bson.ObjectIdHex(orders[count])
+		price, _ := strconv.ParseFloat(orders[count+1], 64)
+		ordType, _ := strconv.Atoi(orders[count+2])
+		quantity, _ := strconv.Atoi(orders[count+3])
+		order = OrderArrayInMongo{id, ordType, price, quantity, orders[count+4], orders[count+5]}
+		count = count + 6
+		ordersStruct = append(ordersStruct, order)
+	}
+	return ordersStruct
 }

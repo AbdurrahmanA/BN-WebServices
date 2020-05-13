@@ -35,6 +35,8 @@ func main() {
 	mux.HandleFunc("/lostpasswordchange", LostPasswordChangePage)
 	mux.HandleFunc("/contactmail", contactPage)
 	mux.HandleFunc("/deleteitem", deleteItemPage)
+	mux.HandleFunc("/updatebeacon", updateBeaconPage)
+	mux.HandleFunc("/updateproduct", updateProductPage)
 
 	mux.Handle("/users-images/", http.StripPrefix("/users-images", http.FileServer(http.Dir("users-images"))))
 	mux.Handle("/beacons-images/", http.StripPrefix("/beacons-images", http.FileServer(http.Dir("beacons-images"))))

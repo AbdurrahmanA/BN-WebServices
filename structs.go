@@ -81,16 +81,17 @@ type StockViewArray struct {
 //Orders Sipariş bilgileri için gerekli veritabanı yapısı
 type Orders struct {
 	bongo.DocumentBase `bson:",inline"`
-	OrderStatus        int     `bson:"order_status" json:"order_status" `
-	InOrder            []Order `bson:"orders" json:"orders" `
-	PaymentType        string  `bson:"payment_type" json:"payment_type" `
-	TotalPrice         int     `bson:"total_price" json:"total_price" `
+	OrderStatus        int                 `bson:"order_status" json:"order_status" `
+	InOrder            []OrderArrayInMongo `bson:"orders" json:"orders" `
+	PaymentType        string              `bson:"payment_type" json:"payment_type" `
+	TotalPrice         int                 `bson:"total_price" json:"total_price" `
 	ContactInfo        struct {
-		UserID      string `bson:"user_id" json:"user_id" `
-		UserSurname string `bson:"user_surname" json:"user_surname"`
-		UserAddress string `bson:"user_address" json:"user_address"`
-		UserPhone   string `bson:"user_phone" json:"user_phone"`
-		UserMail    string `bson:"user_mail" json:"user_mail"`
+		UserID       bson.ObjectId `bson:"user_id" json:"user_id" `
+		UserSurname  string        `bson:"user_surname" json:"user_surname"`
+		UserRealName string        `bson:"user_real_name" json:"user_real_name"`
+		UserAddress  string        `bson:"user_address" json:"user_address"`
+		UserPhone    string        `bson:"user_phone" json:"user_phone"`
+		UserMail     string        `bson:"user_mail" json:"user_mail"`
 	} `bson:"contact_info" json:"contact_info"`
 }
 
@@ -101,28 +102,33 @@ type OrdersInWeb struct {
 	PaymentType string            ` json:"payment_type" `
 	TotalPrice  int               ` json:"total_price" `
 	ContactInfo struct {
-		UserID      string ` json:"user_id" `
-		UserSurname string ` json:"user_surname"`
-		UserAddress string ` json:"user_address"`
-		UserPhone   string ` json:"user_phone"`
-		UserMail    string ` json:"user_mail"`
+		UserID       bson.ObjectId ` json:"user_id" `
+		UserSurname  string        ` json:"user_surname"`
+		UserRealName string        ` json:"user_real_name"`
+		UserAddress  string        ` json:"user_address"`
+		UserPhone    string        ` json:"user_phone"`
+		UserMail     string        ` json:"user_mail"`
 	} ` json:"contact_info"`
 }
 
 //OrderArrayInWeb web den gelen ürünlerin düzenlenmesi için gerekli yapı
 type OrderArrayInWeb struct {
-	ProductID    string  ` json:"product_id" `
-	ProductName  string  ` json:"product_name" `
-	ProductPrice float32 ` json:"product_price" `
-	Quantity     int     ` json:"quantity" `
+	ProductID          string  ` json:"product_id" `
+	ProductType        int     ` json:"product_type" `
+	ProductPrice       float32 ` json:"product_price" `
+	Quantity           int     ` json:"quantity" `
+	ProductDescription string  `json:"product_description" `
+	ProductName        string  `json:"product_name" `
 }
 
-//Order Toplam ürünler için gerekli yapı
-type Order struct {
-	ProductID    bson.ObjectId `bson:"product_id" `
-	ProductName  string        `bson:"product_name" `
-	ProductPrice float32       `bson:"product_price" `
-	Quantity     int           `bson:"product_price" `
+//OrderArrayInMongo Toplam ürünler için gerekli yapı
+type OrderArrayInMongo struct {
+	ProductID          bson.ObjectId `bson:"product_id" `
+	ProductType        int           `bson:"product_type" `
+	ProductPrice       float64       `bson:"product_price" `
+	Quantity           int           `bson:"quantity" `
+	ProductDescription string        `bson:"product_description"`
+	ProductName        string        `bson:"product_name"`
 }
 
 //Log Yapılan işlemlerin takipi için gerekli yapı

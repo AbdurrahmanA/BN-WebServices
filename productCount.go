@@ -30,9 +30,9 @@ func productCountPage(w http.ResponseWriter, r *http.Request) {
 func productCount() ([]byte, string) {
 	var data []byte
 	var m = make(map[int]int)
+	beacons := &Beacon{}
 	for i := 0; i < 4; i++ {
-		results := connection.Collection("beacons").Find(bson.M{"beacon_infos.type": i})
-		beacons := &Beacon{}
+		results := connection.Collection("beacons").Find(bson.M{"user_infos.user_mail": "", "beacon_infos.type": i})
 		count := 0
 		for results.Next(beacons) {
 			count++

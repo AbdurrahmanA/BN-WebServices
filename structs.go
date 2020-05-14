@@ -56,6 +56,7 @@ type Beacon struct {
 		Image      string    `bson:"image" json:"image"`
 		BeaconType int       `bson:"type" json:"type"`
 		LastSeen   time.Time `bson:"last_seen" json:"last_seen"`
+		LostStatus bool      `bson:"lost_status" json:"lost_status" `
 	} `bson:"beacon_infos"  `
 	UserInfos struct {
 		UserID    bson.ObjectId `bson:"user_id" json:"user_id" `
@@ -209,6 +210,7 @@ type MyDevices struct {
 	BeaconType string        ` json:"type"`
 	Variance   int           ` json:"variance"`
 	Image      string        ` json:"img"`
+	LostStatus bool          ` json:"lost_status"`
 }
 
 //MyDevicesDetail cihazın gerekli bilgileri

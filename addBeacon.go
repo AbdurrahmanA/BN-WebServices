@@ -69,6 +69,7 @@ func addBeacon(token string, major string, minor string, uuid string, beaconType
 		beacon.Information.Major = majorInt
 		beacon.Information.Minor = minorInt
 		beacon.Information.UUID = uuid
+		beacon.Information.LostStatus = false
 		beacon.UserInfos.UserID = bson.NewObjectId()
 		errs := connection.Collection("beacons").Save(beacon)
 		if errs != nil {

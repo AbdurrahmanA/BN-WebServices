@@ -47,7 +47,7 @@ func getMyDevices(getID string) ([]byte, string) {
 				dt := time.Now()
 				beaconImg = "http://213.14.182.224:8090/" + beacon.Information.Image + "?day=" + dt.Format("01-02-2006") + "?hour=" + dt.Format("15:04:05")
 			}
-			user = &MyDevices{beacon.Id, beacon.Information.UUID, beacon.Information.BeaconName, beaconTypeConverter, beacon.Information.Variance, beaconImg}
+			user = &MyDevices{beacon.Id, beacon.Information.UUID, beacon.Information.BeaconName, beaconTypeConverter, beacon.Information.Variance, beaconImg, beacon.Information.LostStatus}
 			l = append(l, user)
 		}
 		data, _ = json.Marshal(l)

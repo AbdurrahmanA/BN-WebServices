@@ -87,7 +87,7 @@ func cartPageControl(order string, userRealName string, userID string, userSurna
 	if errID != true {
 		return "ID", false
 	}
-	totalPriceInt, err := strconv.Atoi(totalPrice)
+	totalPriceFloat, err := strconv.ParseFloat(totalPrice, 64)
 	if err != nil {
 		return "totalPrice", false
 	}
@@ -133,7 +133,7 @@ func cartPageControl(order string, userRealName string, userID string, userSurna
 	Order.InOrder = ord
 	Order.OrderStatus = 0
 	Order.PaymentType = "Cart"
-	Order.TotalPrice = totalPriceInt
+	Order.TotalPrice = totalPriceFloat
 	Order.ContactInfo.UserPhone = userPhone
 	Order.ContactInfo.UserAddress = userAddress
 	Order.ContactInfo.UserID = userObjID

@@ -1,7 +1,10 @@
 package main
 
 import (
+	"encoding/json"
 	"net/http"
+
+	"github.com/globalsign/mgo/bson"
 )
 
 func myOrdersListPage(w http.ResponseWriter, r *http.Request) {
@@ -29,14 +32,14 @@ func myOrdersListPage(w http.ResponseWriter, r *http.Request) {
 
 func myOrdersList(userID string) ([]byte, string) {
 	var data []byte
-	/*var l []*OrdersInWeb
+	var l []*OrdersInWeb
 	var notification *OrdersInWeb
 	order := &Orders{}
 	id, errID := checkObjID(userID)
 	if errID == true {
 		notifications := connection.Collection("orders").Find(bson.M{"contact_info.user_id": bson.ObjectIdHex(id)})
 		for notifications.Next(order) {
-			notification = &OrdersInWeb{order.OrderStatus}
+			notification = &OrdersInWeb{order.OrderStatus, order.InOrder, order.PaymentType, order.TotalPrice, order.ContactInfo.UserSurname, order.ContactInfo.UserRealName, order.ContactInfo.UserAddress, order.ContactInfo.UserPhone, order.ContactInfo.UserMail}
 			l = append(l, notification)
 		}
 		data, _ = json.Marshal(l)
@@ -44,11 +47,11 @@ func myOrdersList(userID string) ([]byte, string) {
 			return nil, "NotFound"
 		}
 		if l != nil {
-			response := &MyNotificationsArr{l}
+			response := &OrdersInWebArr{l}
 			data, _ = json.Marshal(response)
 			return addError(data), ""
 		}
-	}*/
+	}
 	return data, "ID"
 
 }

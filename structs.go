@@ -84,7 +84,7 @@ type Orders struct {
 	OrderStatus        int                 `bson:"order_status"  `
 	InOrder            []OrderArrayInMongo `bson:"orders" `
 	PaymentType        string              `bson:"payment_type"  `
-	TotalPrice         int                 `bson:"total_price"  `
+	TotalPrice         float64             `bson:"total_price"  `
 	ContactInfo        struct {
 		UserID       bson.ObjectId `bson:"user_id"  `
 		UserSurname  string        `bson:"user_surname" `
@@ -97,27 +97,20 @@ type Orders struct {
 
 //OrdersInWeb Sipariş bilgileri için gerekli  yapısı
 type OrdersInWeb struct {
-	OrderStatus int               ` json:"order_status" `
-	InOrder     []OrderArrayInWeb ` json:"orders" `
-	PaymentType string            ` json:"payment_type" `
-	TotalPrice  int               ` json:"total_price" `
-	ContactInfo struct {
-		UserSurname  string ` json:"user_surname"`
-		UserRealName string ` json:"user_real_name"`
-		UserAddress  string ` json:"user_address"`
-		UserPhone    string ` json:"user_phone"`
-		UserMail     string ` json:"user_mail"`
-	} ` json:"contact_info"`
+	OrderStatus  int                 ` json:"order_status" `
+	InOrder      []OrderArrayInMongo ` json:"orders" `
+	PaymentType  string              ` json:"payment_type" `
+	TotalPrice   float64             ` json:"total_price" `
+	UserSurname  string              ` json:"user_surname"`
+	UserRealName string              ` json:"user_real_name"`
+	UserAddress  string              ` json:"user_address"`
+	UserPhone    string              ` json:"user_phone"`
+	UserMail     string              ` json:"user_mail"`
 }
 
-//OrderArrayInWeb web den gelen ürünlerin düzenlenmesi için gerekli yapı
-type OrderArrayInWeb struct {
-	ProductID          string  ` json:"product_id" `
-	ProductType        int     ` json:"product_type" `
-	ProductPrice       float32 ` json:"product_price" `
-	Quantity           int     ` json:"quantity" `
-	ProductDescription string  `json:"product_description" `
-	ProductName        string  `json:"product_name" `
+//OrdersInWebArr Sipariş bilgileri için gerekli  yapısı
+type OrdersInWebArr struct {
+	Orders []*OrdersInWeb ` json:"orders" `
 }
 
 //OrderArrayInMongo Toplam ürünler için gerekli yapı

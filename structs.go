@@ -98,6 +98,7 @@ type Orders struct {
 
 //OrdersInWeb Sipariş bilgileri için gerekli  yapısı
 type OrdersInWeb struct {
+	Time         time.Time           ` json:"time" `
 	OrderStatus  int                 ` json:"order_status" `
 	InOrder      []OrderArrayInMongo ` json:"orders" `
 	PaymentType  string              ` json:"payment_type" `

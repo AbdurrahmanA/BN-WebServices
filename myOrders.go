@@ -33,14 +33,14 @@ func myOrdersListPage(w http.ResponseWriter, r *http.Request) {
 func myOrdersList(userID string) ([]byte, string) {
 	var data []byte
 	var l []*OrdersInWeb
-	var notification *OrdersInWeb
+	var orders *OrdersInWeb
 	order := &Orders{}
 	id, errID := checkObjID(userID)
 	if errID == true {
-		notifications := connection.Collection("orders").Find(bson.M{"contact_info.user_id": bson.ObjectIdHex(id)})
-		for notifications.Next(order) {
-			notification = &OrdersInWeb{order.OrderStatus, order.InOrder, order.PaymentType, order.TotalPrice, order.ContactInfo.UserSurname, order.ContactInfo.UserRealName, order.ContactInfo.UserAddress, order.ContactInfo.UserPhone, order.ContactInfo.UserMail}
-			l = append(l, notification)
+		Order := connection.Collection("orders").Find(bson.M{"contact_info.user_id": bson.ObjectIdHex(id)})
+		for Order.Next(order) {
+			orders = &OrdersInWeb{order.Created, order.OrderStatus, order.InOrder, order.PaymentType, order.TotalPrice, order.ContactInfo.UserSurname, order.ContactInfo.UserRealName, order.ContactInfo.UserAddress, order.ContactInfo.UserPhone, order.ContactInfo.UserMail}
+			l = append(l, orders)
 		}
 		data, _ = json.Marshal(l)
 		if l == nil {

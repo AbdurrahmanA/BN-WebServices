@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/globalsign/mgo/bson"
@@ -37,6 +38,7 @@ func checkLostDevice(uuid string) (bool, string, []byte) {
 	lostDevice := &LostBeacon{}
 	err := connection.Collection("lost_beacons").FindOne(bson.M{"beacon_infos.uuid": uuid, "lost_status": true}, lostDevice)
 	if err != nil {
+		fmt.Println(err.Error())
 		return false, "NotFound", data
 	}
 	data, err = json.Marshal(lostDevice)

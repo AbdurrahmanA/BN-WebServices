@@ -107,6 +107,11 @@ func addLostDeviceControl(phone string, email string, creditCardNo string, credi
 		if errs != nil {
 			return false, "Save"
 		}
+		beacon.Information.LostStatus = true
+		errs = connection.Collection("beacons").Save(beacon)
+		if errs != nil {
+			return false, "Save"
+		}
 		return true, ""
 	}
 	return false, "ID"

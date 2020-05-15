@@ -102,7 +102,7 @@ func checkEmailValidity(email string) bool {
 	return false
 }
 func sendRegisterMail(token string, email string) bool {
-	url := "http://213.14.182.224:8090/registercontrol?token="
+	url := "http://213.14.182.224:8060/registercontrol?token="
 
 	temp := registerEmailTemplate(url + token)
 
@@ -128,7 +128,7 @@ func sendRegisterMail(token string, email string) bool {
 	return true
 }
 func sendLostPasswordMail(token string, email string) bool {
-	url := "http://213.14.182.224:8090/lostpasswordcontrol?token="
+	url := "http://213.14.182.224:8060/lostpasswordcontrol?token="
 	dv := "&email=" + email
 	temp := lostPasswordEmailTemplate(url + token + dv)
 

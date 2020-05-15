@@ -19,6 +19,8 @@ func validationLostPasswordPage(w http.ResponseWriter, r *http.Request) {
 			} else {
 				if control == "NotFound" {
 					writeResponse(w, notFindRecordError())
+				} else if control == "Save" {
+					writeResponse(w, dataBaseSaveError())
 				} else {
 					writeResponse(w, someThingWentWrong())
 				}
@@ -34,6 +36,11 @@ func validationLostPassword(token string, email string) (bool, string) {
 	err := connection.Collection("users").FindOne(bson.M{"user_infos.user_web_token": token, "user_infos.user_mail": email}, person)
 	if err != nil {
 		return false, "NotFound"
+	}
+	person.UserInfos.UserWebToken = ""
+	errors := connection.Collection("users").Save(person)
+	if errors != nil {
+		return false, "Save"
 	}
 	return true, ""
 }

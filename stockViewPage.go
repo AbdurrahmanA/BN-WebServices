@@ -41,7 +41,7 @@ func stockView(token string) ([]byte, string) {
 	}
 	var l []*StockView
 	beacon := &Beacon{}
-	beacons := connection.Collection("beacons").Find(bson.M{"user_infos.user_mail": ""})
+	beacons := connection.Collection("beacons").Find(bson.M{"user_infos.user_mail": "", "user_infos.user_phone": ""})
 	for beacons.Next(beacon) {
 		typeStr := checkBeaconType(beacon.Information.BeaconType)
 		device = &StockView{beacon.Information.UUID, beacon.Information.Major, beacon.Information.Minor, typeStr, beacon.Id}

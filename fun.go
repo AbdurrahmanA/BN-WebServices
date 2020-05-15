@@ -85,7 +85,7 @@ func checkPermission(token string) bool {
 }
 
 func checkPhoneNumber(number string) bool {
-	regex := regexp.MustCompile("^[+]?(?:[0-9]{2})?[0-9]{10}$")
+	regex := regexp.MustCompile("^[+]([0-9]{2})[0-9]{10}$")
 	match := regex.MatchString(number)
 	if match == true {
 		return true

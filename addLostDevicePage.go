@@ -99,6 +99,7 @@ func addLostDeviceControl(phone string, email string, creditCardNo string, credi
 			LostLong:   floatLostLong,
 		}
 		lostDevice.BeaconInfos.UUID = beacon.Information.UUID
+		lostDevice.BeaconInfos.BeaconName = beacon.Information.BeaconName
 		lostDevice.LostDesc = lostDesc
 		lostDevice.UserInfos.UserMail = email
 		lostDevice.UserInfos.UserPhone = phone

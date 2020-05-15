@@ -12,7 +12,6 @@ var lock = &sync.Mutex{}
 func conDb() *bongo.Connection {
 	if connection == nil {
 		lock.Lock()
-		defer lock.Unlock()
 		if connection == nil {
 			config := &bongo.Config{
 				ConnectionString: "localhost",
@@ -25,6 +24,7 @@ func conDb() *bongo.Connection {
 			}
 			return connection
 		}
+		defer lock.Unlock()
 		return connection
 	}
 	return connection

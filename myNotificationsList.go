@@ -53,5 +53,4 @@ func myNotificationsList(userID string) ([]byte, string) {
 		}
 	}
 	return data, "ID"
-
 }

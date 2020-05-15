@@ -140,6 +140,10 @@ func cartPageControl(order string, userRealName string, userID string, userSurna
 	Order.ContactInfo.UserMail = email
 	Order.ContactInfo.UserSurname = userSurname
 	Order.ContactInfo.UserRealName = userRealName
+	errors := connection.Collection("orders").Save(Order)
+	if errors != nil {
+		return "Save", false
+	}
 	return "", true
 
 }

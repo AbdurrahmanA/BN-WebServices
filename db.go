@@ -14,7 +14,7 @@ func conDb() *bongo.Connection {
 		lock.Lock()
 		if connection == nil {
 			config := &bongo.Config{
-				ConnectionString: "localhost",
+				ConnectionString: "locsalhost",
 				Database:         "BN",
 			}
 			connection, err := bongo.Connect(config)
